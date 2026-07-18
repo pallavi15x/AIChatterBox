@@ -1826,7 +1826,7 @@
             <div class="ch-head-status">Online &mdash; ready to chat</div>
           </div>
           <div class="ch-head-actions">
-            <button class="ch-icon-btn" title="Clear chat" ng-click="messages.length = 1" style="font-size:14px;">
+            <button class="ch-icon-btn" title="Clear chat" ng-click="clearChat()" style="font-size:14px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg>
             </button>
           </div>
@@ -1950,7 +1950,12 @@
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">AIChatterbox plugs into your existing workflow seamlessly.</p>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
         <div ng-repeat="item in integrations" class="feat-item" ng-style="{'border-bottom': '3.5px solid ' + item.color, 'box-shadow': '0 8px 24px -4px rgba(0,0,0,0.1)'}" style="display:flex;flex-direction:column;align-items:center;gap:12px;cursor:default;text-align:center;padding:26px 20px;">
-          <div ng-style="{'color': item.color}" style="display:inline-flex;"><i lucide-icon="{{item.icon}}" style="width:34px;height:34px;"></i></div>
+          <div ng-style="{'color': item.color}" style="display:inline-flex;">
+            <i ng-if="item.icon !== 'slack'" lucide-icon="{{item.icon}}" style="width:34px;height:34px;"></i>
+            <svg ng-if="item.icon === 'slack'" xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M3.362 10.11c0 .926-.756 1.681-1.681 1.681S0 11.036 0 10.111.756 8.43 1.68 8.43h1.682zm.846 0c0-.924.756-1.68 1.681-1.68s1.681.756 1.681 1.68v4.21c0 .924-.756 1.68-1.68 1.68a1.685 1.685 0 0 1-1.682-1.68zM5.89 3.362c-.926 0-1.682-.756-1.682-1.681S4.964 0 5.89 0s1.68.756 1.68 1.68v1.682zm0 .846c.924 0 1.68.756 1.68 1.681S6.814 7.57 5.89 7.57H1.68C.757 7.57 0 6.814 0 5.89c0-.926.756-1.682 1.68-1.682zm6.749 1.682c0-.926.755-1.682 1.68-1.682S16 4.964 16 5.889s-.756 1.681-1.68 1.681h-1.681zm-.848 0c0 .924-.755 1.68-1.68 1.68A1.685 1.685 0 0 1 8.43 5.89V1.68C8.43.757 9.186 0 10.11 0c.926 0 1.681.756 1.681 1.68zm-1.681 6.748c.926 0 1.682.756 1.682 1.681S11.036 16 10.11 16s-1.681-.756-1.681-1.68v-1.682h1.68zm0-.847c-.924 0-1.68-.755-1.68-1.68s.756-1.681 1.68-1.681h4.21c.924 0 1.68.756 1.68 1.68 0 .926-.756 1.681-1.68 1.681z"/>
+            </svg>
+          </div>
           <h4 style="font-size:14px;font-weight:700;color:var(--text-main);">{{item.name}}</h4>
           <p style="font-size:11.5px;color:var(--text-muted);line-height:1.5;">{{item.desc}}</p>
         </div>
@@ -2215,8 +2220,16 @@
       }])
 
       // ── CHAT ────────────────────────────────────────────────────
-      .controller('ChatCtrl', ['$scope', '$http', '$timeout', function($s, $http, $timeout) {
-        $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Ask me anything to get started." }];
+      .controller('ChatCtrl', ['$scope', '$http', '$timeout', '$rootScope', function($s, $http, $timeout, $rs) {
+        // Initialize state
+        var savedName = ($rs.user && $rs.user.name) || localStorage.getItem('chatterbox_user_name');
+        if (savedName) {
+          $s.messages = [{ role: 'bot', text: "Welcome back, " + savedName + "! I'm AIChatterbox. How can I help you today?" }];
+          $s.chatState = 'chatting';
+        } else {
+          $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Before we get started, what is your name?" }];
+          $s.chatState = 'awaiting_name';
+        }
         $s.draft = '';
         $s.isSending = false;
 
@@ -2225,6 +2238,18 @@
           if ($s.isSending) return;
           $s.draft = text;
           $s.sendMessage();
+        };
+
+        // Clear chat helper
+        $s.clearChat = function() {
+          var currentName = ($rs.user && $rs.user.name) || localStorage.getItem('chatterbox_user_name');
+          if (currentName) {
+            $s.messages = [{ role: 'bot', text: "Welcome back, " + currentName + "! How can I help you today?" }];
+            $s.chatState = 'chatting';
+          } else {
+            $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Before we get started, what is your name?" }];
+            $s.chatState = 'awaiting_name';
+          }
         };
 
         // Auto-scroll logic
@@ -2287,6 +2312,44 @@
           if (!txt || $s.isSending) return;
           $s.messages.push({ role: 'user', text: txt });
           $s.draft = '';
+          $s.scrollToBottom();
+
+          // Handle awaiting_name state locally
+          if ($s.chatState === 'awaiting_name') {
+            $s.isSending = true;
+            $timeout(function() {
+              var nameInput = txt;
+              // Clean punctuation and check patterns like "My name is John" or "I am John"
+              var cleanTxt = txt.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+              var match = cleanTxt.match(/(?:my name is|i am|im|this is|call me)\s+([a-zA-Z0-9\s]+)/i);
+              if (match && match[1]) {
+                nameInput = match[1].trim();
+              }
+              // Format capitalization
+              nameInput = nameInput.split(' ').map(function(word) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+              }).join(' ');
+
+              if (nameInput.length > 20) {
+                nameInput = nameInput.substring(0, 20);
+              }
+
+              // Update global user and storage
+              $s.$apply(function() {
+                $rs.user = { name: nameInput };
+                localStorage.setItem('chatterbox_user_name', nameInput);
+                $s.messages.push({
+                  role: 'bot',
+                  text: "Nice to meet you, " + nameInput + "! 😊 How can I help you today?"
+                });
+                $s.chatState = 'chatting';
+                $s.isSending = false;
+                $s.scrollToBottom();
+              });
+            }, 800);
+            return;
+          }
+
           $s.isSending = true;
           $s.scrollToBottom();
 
