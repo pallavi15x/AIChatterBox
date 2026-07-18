@@ -358,9 +358,27 @@
 
       /* Hero section */
       section[style*="display:flex;align-items:center"] {
-        flex-direction: column !important;
-        padding: 40px 20px !important;
+        flex-direction: column-reverse !important; /* Stack robot image above text */
+        padding: 30px 16px 50px !important;
         min-height: unset !important;
+      }
+      section[style*="display:flex;align-items:center"] > div[style*="width:55%"] {
+        position: relative !important;
+        width: 100% !important;
+        height: 250px !important;
+        margin-bottom: 24px;
+        order: -1;
+      }
+      section[style*="display:flex;align-items:center"] > div[style*="max-width:620px"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 16px !important;
+      }
+
+      /* Tab content grids (from 1.2fr 1fr to 1 column) */
+      div[style*="grid-template-columns:1.2fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
       }
 
       /* Feature grids */
@@ -373,8 +391,16 @@
         grid-template-columns: 1fr !important;
       }
 
+      /* Stats - keep 3 cols */
+      div[style*="grid-template-columns:repeat(3,1fr)"] {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+      }
+
       /* Pricing - allow 1 col */
-      div[style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+      div[style*="grid-template-columns:repeat(3,1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
 
       /* Chat panel */
       .chat-page { padding: 20px 12px 40px; }
