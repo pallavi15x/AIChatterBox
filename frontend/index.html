@@ -5,59 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="AIChatterbox — Effortless AI conversations. Talk smarter, connect faster." />
   <title>AIChatterbox — Talk Smarter, Connect Faster</title>
-  <script>
-    // Visual diagnostic log to troubleshoot script execution
-    function logDiag(msg, color) {
-      var d = document.getElementById('diag-log');
-      if (!d) {
-        d = document.createElement('div');
-        d.id = 'diag-log';
-        d.style.position = 'fixed';
-        d.style.bottom = '10px';
-        d.style.right = '10px';
-        d.style.background = 'rgba(0,0,0,0.85)';
-        d.style.color = '#00ff00';
-        d.style.padding = '10px';
-        d.style.fontSize = '12px';
-        d.style.fontFamily = 'monospace';
-        d.style.zIndex = '999999';
-        d.style.border = '1px solid #00ff00';
-        d.style.borderRadius = '5px';
-        document.body.appendChild(d);
-      }
-      var p = document.createElement('p');
-      if (color) p.style.color = color;
-      p.innerText = msg;
-      d.appendChild(p);
-    }
-
-    window.addEventListener('DOMContentLoaded', function() {
-      logDiag('DOM Content Loaded');
-      logDiag('angular available: ' + (typeof angular !== 'undefined'));
-      logDiag('angular-route available: ' + (typeof angular !== 'undefined' && angular.module && (function() {
-        try { angular.module('ngRoute'); return true; } catch(e) { return false; }
-      })()));
-    });
-
-    window.onerror = function(message, source, lineno, colno, error) {
-      logDiag('ERROR: ' + message + ' at ' + source + ':' + lineno, '#ff3333');
-      var div = document.createElement('div');
-      div.style.position = 'fixed';
-      div.style.top = '0';
-      div.style.left = '0';
-      div.style.width = '100%';
-      div.style.background = '#ff3333';
-      div.style.color = 'white';
-      div.style.padding = '15px';
-      div.style.zIndex = '999999';
-      div.style.fontFamily = 'monospace';
-      div.style.fontSize = '14px';
-      div.style.whiteSpace = 'pre-wrap';
-      div.innerText = 'JS ERROR: ' + message + '\nSource: ' + source + ' (Line ' + lineno + ':' + colno + ')' + (error && error.stack ? '\n\nStack:\n' + error.stack : '');
-      document.body.appendChild(div);
-      return false;
-    };
-  </script>
+  <!-- Fonts and styling -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1204,8 +1152,68 @@
     }
 
     .ch-form input:focus {
-      border-color: var(--accent-1);
+      border-color: rgba(99, 140, 255, 0.55) !important;
+      box-shadow: 0 0 0 3px rgba(61, 122, 255, 0.1) !important;
+      outline: none;
     }
+    body.light-theme .ch-form input:focus {
+      border-color: rgba(37, 99, 235, 0.5) !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.07) !important;
+    }
+    /* Message action buttons */
+    .msg-actions {
+      display: flex;
+      gap: 8px;
+      padding: 2px 4px;
+      flex-wrap: wrap;
+    }
+    .msg-actions-user { justify-content: flex-end; }
+    .msg-act-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.18s;
+      cursor: pointer;
+    }
+    .msg-act-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.08); }
+    body.light-theme .msg-act-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.07); }
+    body.light-theme .msg-act-btn:hover { background: rgba(0,0,0,0.08); }
+    .act-active-blue { color: #3d7aff !important; border-color: rgba(61,122,255,0.3) !important; }
+    .act-active-green { color: #22c55e !important; border-color: rgba(34,197,94,0.3) !important; }
+    .act-active-red { color: #ef4444 !important; border-color: rgba(239,68,68,0.3) !important; }
+    /* Feedback box */
+    .feedback-box {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 12px;
+      max-width: 320px;
+    }
+    .feedback-ta {
+      width: 100%;
+      min-height: 52px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      box-sizing: border-box;
+    }
+    body.light-theme .feedback-ta { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
+    .fb-cancel { background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+    .fb-cancel:hover { color: var(--text-main); }
+    .fb-submit { background: linear-gradient(135deg,#3d7aff,#6b5ef8); border: none; border-radius: 6px; padding: 5px 14px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .align-end { align-items: flex-end; }
 
     .ch-form input::placeholder {
       color: var(--text-muted);
@@ -1310,9 +1318,9 @@
   <!-- ==========================================
        LOGIN / SIGNUP MODAL
        ========================================== -->
-  <div class="login-modal-overlay" ng-if="showLoginModal" ng-click="closeLoginModal($event)" id="modal-overlay">
-    <div class="login-modal-content">
-      <button class="modal-close" ng-click="showLoginModal = false">&times;</button>
+  <div class="login-modal-overlay" ng-if="showLoginModal" ng-click="$root.showLoginModal = false" id="modal-overlay">
+    <div class="login-modal-content" ng-click="$event.stopPropagation()">
+      <button class="modal-close" ng-click="$root.showLoginModal = false">&times;</button>
       
       <div ng-if="!isSignUp">
         <h2>Welcome Back</h2>
@@ -1408,18 +1416,7 @@
       </div>
     </section>
 
-    <!-- HORIZONTAL LOGO MARQUEE -->
-    <div style="overflow:hidden;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:14px 0;background:rgba(8,16,34,0.4);">
-      <div style="display:flex;gap:40px;width:max-content;">
-        <span ng-repeat="item in marqueeItems" style="font-size:13px;font-weight:600;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;">
-          <span style="font-size:16px;">{{item.emoji}}</span> {{item.text}}
-        </span>
-        <!-- duplicate items for full visual coverage -->
-        <span ng-repeat="item in marqueeItems" style="font-size:13px;font-weight:600;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;">
-          <span style="font-size:16px;">{{item.emoji}}</span> {{item.text}}
-        </span>
-      </div>
-    </div>
+
 
     <!-- TABS INTERACTIVE PRODUCT DEMO -->
     <section style="max-width:1000px;margin:80px auto;padding:0 24px;">
@@ -1564,20 +1561,48 @@
     <section class="chat-page">
       <div class="chat-panel">
         <header class="ch-head">
-          <span class="ch-dot"></span>
-          AIChatterbox
-          <span class="ch-status">online</span>
+          <span class="brand-orb" style="width:26px;height:26px;flex-shrink:0;animation:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+              <circle cx="9" cy="10" r="2.4" fill="white"/>
+              <circle cx="15" cy="10" r="2.4" fill="white"/>
+              <path d="M7 15.5c1.4 1.4 3.2 2 5 2s3.6-.6 5-2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span style="font-size:14.5px;font-weight:700;">AIChatterbox Console</span>
         </header>
-        <div class="ch-msgs">
+        <div class="ch-msgs" id="chat-messages-list">
           <div class="msg-row" ng-repeat="m in messages" ng-class="{'msg-row-u': m.role === 'user'}">
-            <div class="bubble" ng-class="m.role === 'user' ? 'bub-usr' : 'bub-bot'">
-              {{m.text}}
+            <div style="display:flex;flex-direction:column;gap:4px;" ng-class="{'align-end': m.role === 'user'}">
+              <div class="bubble" ng-class="m.role === 'user' ? 'bub-usr' : 'bub-bot'">{{m.text}}</div>
+              <!-- Action bar -->
+              <div class="msg-actions" ng-class="{'msg-actions-user': m.role === 'user'}">
+                <a href="" ng-click="copyText(m)" ng-class="{'act-active-blue': m.copied}" class="msg-act-btn" title="Copy">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span>{{m.copied ? 'Copied!' : 'Copy'}}</span>
+                </a>
+                <a href="" ng-click="likeMsg(m)" ng-class="{'act-active-green': m.liked}" class="msg-act-btn" title="Like">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                </a>
+                <a href="" ng-click="dislikeMsg(m)" ng-class="{'act-active-red': m.disliked}" class="msg-act-btn" title="Dislike">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                </a>
+                <a href="" ng-click="toggleFeedback(m)" ng-class="{'act-active-blue': m.feedbackSubmitted}" class="msg-act-btn" title="Feedback">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span>{{m.feedbackSubmitted ? 'Sent!' : 'Feedback'}}</span>
+                </a>
+              </div>
+              <!-- Feedback box -->
+              <div ng-if="m.showFeedback" class="feedback-box">
+                <textarea ng-model="m.feedbackText" placeholder="Write your feedback..." class="feedback-ta"></textarea>
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+                  <button ng-click="cancelFeedback(m)" class="fb-cancel">Cancel</button>
+                  <button ng-click="submitFeedback(m)" class="fb-submit">Submit</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="msg-row" ng-if="isSending">
-            <div class="bubble bub-bot typing">
-              <span></span><span></span><span></span>
-            </div>
+            <div class="bubble bub-bot typing"><span></span><span></span><span></span></div>
           </div>
         </div>
         <form class="ch-form" ng-submit="sendMessage()">
@@ -1591,7 +1616,6 @@
   <!-- FEATURES PAGE -->
   <script type="text/ng-template" id="features.html">
     <section style="max-width:900px;margin:60px auto;padding:0 24px;">
-      <p class="eyebrow" style="text-align:center;">What We Offer</p>
       <h1 class="page-title">Packed With Powerful Features</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Everything you need to communicate smarter, all in one place.</p>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
@@ -1610,7 +1634,6 @@
   <!-- PRICING PAGE -->
   <script type="text/ng-template" id="pricing.html">
     <section style="max-width:960px;margin:60px auto;padding:0 24px;">
-      <p class="eyebrow" style="text-align:center;">Pricing</p>
       <h1 class="page-title">Simple, Transparent Pricing</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">No hidden fees. Cancel anytime.</p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
@@ -1630,7 +1653,6 @@
   <!-- INTEGRATIONS PAGE -->
   <script type="text/ng-template" id="integrations.html">
     <section style="max-width:900px;margin:60px auto;padding:0 24px;">
-      <p class="eyebrow" style="text-align:center;">Integrations</p>
       <h1 class="page-title">Connect Everything You Use</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">AIChatterbox plugs into your existing workflow seamlessly.</p>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
@@ -1646,7 +1668,6 @@
   <!-- BLOG PAGE -->
   <script type="text/ng-template" id="blog.html">
     <section style="max-width:860px;margin:60px auto;padding:0 24px;">
-      <p class="eyebrow" style="text-align:center;">Blog</p>
       <h1 class="page-title">AI Insights and Updates</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Stay up to date with the latest in AI communication technology.</p>
       <div style="display:flex;flex-direction:column;gap:20px;">
@@ -1655,8 +1676,8 @@
           <div>
             <p style="font-size:11px;font-weight:600;color:var(--accent-1);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">{{post.category}} &bull; {{post.date}}</p>
             <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em;">{{post.title}}</h3>
-            <p style="font-size:13.5px;color:var(--text-muted);line-height:1.6;">{{post.excerpt}}</p>
-            <a href="" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:var(--accent-1);">Read More &rarr;</a>
+            <p style="font-size:13.5px;color:var(--text-muted);line-height:1.6;white-space:pre-line;">{{post.showFullContent ? (post.excerpt + post.bodyDetail) : post.excerpt}}</p>
+            <a href="" ng-click="post.showFullContent = !post.showFullContent" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:var(--accent-1);">{{post.showFullContent ? 'Show Less ↑' : 'Read More →'}}</a>
           </div>
         </div>
       </div>
@@ -1875,16 +1896,68 @@
         $s.draft = '';
         $s.isSending = false;
 
+        // Auto-scroll logic
+        $s.scrollToBottom = function() {
+          $timeout(function() {
+            var msgs = document.getElementById('chat-messages-list');
+            if (msgs) {
+              msgs.scrollTop = msgs.scrollHeight;
+            }
+          }, 30);
+        };
+
+        // Watchers for scrolling
+        $s.$watchCollection('messages', function() {
+          $s.scrollToBottom();
+        });
+        $s.$watch('isSending', function() {
+          $s.scrollToBottom();
+        });
+        $s.$watch('draft', function(newVal) {
+          if (newVal) {
+            $s.scrollToBottom();
+          }
+        });
+
+        // Message Actions
+        $s.copyText = function(msg) {
+          if (!navigator.clipboard) return;
+          navigator.clipboard.writeText(msg.text).then(function() {
+            $s.$apply(function() {
+              msg.copied = true;
+              $timeout(function() { msg.copied = false; }, 2000);
+            });
+          });
+        };
+        $s.likeMsg = function(msg) {
+          msg.liked = !msg.liked;
+          if (msg.liked) msg.disliked = false;
+        };
+        $s.dislikeMsg = function(msg) {
+          msg.disliked = !msg.disliked;
+          if (msg.disliked) msg.liked = false;
+        };
+        $s.toggleFeedback = function(msg) {
+          if (msg.feedbackSubmitted) return;
+          msg.showFeedback = !msg.showFeedback;
+          msg.feedbackText = '';
+        };
+        $s.cancelFeedback = function(msg) {
+          msg.showFeedback = false;
+        };
+        $s.submitFeedback = function(msg) {
+          if (!msg.feedbackText || !msg.feedbackText.trim()) return;
+          msg.feedbackSubmitted = true;
+          msg.showFeedback = false;
+        };
+
         $s.sendMessage = function() {
           var txt = ($s.draft || '').trim();
           if (!txt || $s.isSending) return;
           $s.messages.push({ role: 'user', text: txt });
           $s.draft = '';
           $s.isSending = true;
-          $timeout(function() {
-            var msgs = document.getElementById('chat-messages-list');
-            if (msgs) msgs.scrollTop = msgs.scrollHeight;
-          }, 50);
+          $s.scrollToBottom();
 
           // Build messages payload for Groq
           var systemMessage = {
@@ -1928,10 +2001,7 @@
           })
           .finally(function() {
             $s.isSending = false;
-            $timeout(function() {
-              var msgs = document.getElementById('chat-messages-list');
-              if (msgs) msgs.scrollTop = msgs.scrollHeight;
-            }, 60);
+            $s.scrollToBottom();
           });
         };
       }])
@@ -1977,14 +2047,30 @@
       // ── BLOG PAGE ────────────────────────────────────────────────
       .controller('BlogCtrl', ['$scope', function($s) {
         $s.blogPosts = [
-          { emoji: '🚀', category: 'AI News',  date: 'Jul 15, 2026', title: 'Why Groq Changes Everything About AI Speed',
-            excerpt: 'We switched our inference engine to Groq and cut response times by 10x. Here is what that means for your experience.' },
-          { emoji: '💡', category: 'Tips',     date: 'Jul 10, 2026', title: '5 Prompts That Get the Best Answers From AIChatterbox',
-            excerpt: 'Good prompts get good answers. We tested hundreds of patterns and distilled them into five simple templates.' },
-          { emoji: '📄', category: 'Feature',  date: 'Jul 3, 2026',  title: 'Document Chat Is Here — Ask Your PDFs Anything',
-            excerpt: 'Our new document Q&A feature lets you upload any PDF or Word file and have a real conversation with its content.' },
-          { emoji: '🔓', category: 'Security', date: 'Jun 28, 2026', title: 'How We Keep Your Conversations Private',
-            excerpt: 'We explain exactly how your data is handled, stored, and never used to train AI models.' }
+          {
+            emoji: '⚡', category: 'AI News', date: 'Jul 15, 2026',
+            title: 'Why Groq Changes Everything About AI Speed',
+            excerpt: 'We switched our inference engine to Groq and cut response times by 10x. Here is what that means for your experience.',
+            bodyDetail: '\n\nBy utilizing Groq LPU technology, AIChatterbox executes model tokens at over 500 tokens per second — eliminating latency completely. Users can brainstorm uninterrupted and access results in the blink of an eye.'
+          },
+          {
+            emoji: '💡', category: 'Tips', date: 'Jul 10, 2026',
+            title: '5 Prompts That Get the Best Answers From AIChatterbox',
+            excerpt: 'Good prompts get good answers. We tested hundreds of patterns and distilled them into five simple templates.',
+            bodyDetail: '\n\n1. "Explain [topic] in three bullet points."\n2. "Write code for [action] in [language]."\n3. "Brainstorm 5 unique titles for [theme]."\n4. "Summarize this focusing only on actionable decisions."\n5. "Compare [A] and [B] in a markdown table."'
+          },
+          {
+            emoji: '📂', category: 'Feature', date: 'Jul 3, 2026',
+            title: 'Document Chat Is Here - Ask Your PDFs Anything',
+            excerpt: 'Our new document Q&A feature lets you upload any PDF or Word file and have a real conversation with its content.',
+            bodyDetail: '\n\nSimply upload your files and ask questions grounded in the document text. Perfect for research papers, contracts, financial reports, or extracting action items from long summaries.'
+          },
+          {
+            emoji: '🔒', category: 'Security', date: 'Jun 28, 2026',
+            title: 'How We Keep Your Conversations Private',
+            excerpt: 'We explain exactly how your data is handled, stored, and never used to train AI models.',
+            bodyDetail: '\n\nAll requests are processed temporarily without saving content permanently. We never sell your interactions or use them to retrain public models. Your conversations stay private — always.'
+          }
         ];
       }]);
   </script>
