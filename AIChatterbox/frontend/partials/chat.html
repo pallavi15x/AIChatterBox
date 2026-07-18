@@ -1,0 +1,37 @@
+<section class="chat-page">
+  <div class="chat-panel">
+
+    <header class="chat-header">
+      <span class="chat-dot"></span>
+      AIChatterbox
+      <span class="chat-status">online</span>
+    </header>
+
+    <div class="chat-messages">
+      <div class="msg-row" ng-repeat="m in messages" ng-class="{'msg-row-user': m.role === 'user'}">
+        <div class="bubble" ng-class="m.role === 'user' ? 'bubble-user' : 'bubble-bot'">
+          {{m.text}}
+        </div>
+      </div>
+
+      <div class="msg-row" ng-if="isSending">
+        <div class="bubble bubble-bot typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <form class="chat-input-row" ng-submit="sendMessage()">
+      <input
+        type="text"
+        ng-model="draft"
+        placeholder="Type your message..."
+        autofocus
+      />
+      <button type="submit" class="btn-primary btn-small" ng-disabled="!draft.trim()">
+        Send
+      </button>
+    </form>
+
+  </div>
+</section>

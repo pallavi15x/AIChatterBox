@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="aiChatterbox">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AIChatterbox — Effortless AI conversations. Talk smarter, connect faster." />
+  <title>AIChatterbox — Talk Smarter, Connect Faster</title>
+  <script>
+    // Visual diagnostic log to troubleshoot script execution
+    function logDiag(msg, color) {
+      var d = document.getElementById('diag-log');
+      if (!d) {
+        d = document.createElement('div');
+        d.id = 'diag-log';
+        d.style.position = 'fixed';
+        d.style.bottom = '10px';
+        d.style.right = '10px';
+        d.style.background = 'rgba(0,0,0,0.85)';
+        d.style.color = '#00ff00';
+        d.style.padding = '10px';
+        d.style.fontSize = '12px';
+        d.style.fontFamily = 'monospace';
+        d.style.zIndex = '999999';
+        d.style.border = '1px solid #00ff00';
+        d.style.borderRadius = '5px';
+        document.body.appendChild(d);
+      }
+      var p = document.createElement('p');
+      if (color) p.style.color = color;
+      p.innerText = msg;
+      d.appendChild(p);
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      logDiag('DOM Content Loaded');
+      logDiag('angular available: ' + (typeof angular !== 'undefined'));
+      logDiag('angular-route available: ' + (typeof angular !== 'undefined' && angular.module && (function() {
+        try { angular.module('ngRoute'); return true; } catch(e) { return false; }
+      })()));
+    });
+
+    window.onerror = function(message, source, lineno, colno, error) {
+      logDiag('ERROR: ' + message + ' at ' + source + ':' + lineno, '#ff3333');
+      var div = document.createElement('div');
+      div.style.position = 'fixed';
+      div.style.top = '0';
+      div.style.left = '0';
+      div.style.width = '100%';
+      div.style.background = '#ff3333';
+      div.style.color = 'white';
+      div.style.padding = '15px';
+      div.style.zIndex = '999999';
+      div.style.fontFamily = 'monospace';
+      div.style.fontSize = '14px';
+      div.style.whiteSpace = 'pre-wrap';
+      div.innerText = 'JS ERROR: ' + message + '\nSource: ' + source + ' (Line ' + lineno + ':' + colno + ')' + (error && error.stack ? '\n\nStack:\n' + error.stack : '');
+      document.body.appendChild(div);
+      return false;
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================
+       TOKENS & VARIABLES
+       ========================================== */
+    :root {
+      --bg: #060b16;
+      --panel: rgba(8, 16, 34, 0.88);
+      --panel-border: rgba(70, 120, 255, 0.18);
+      --text-main: #e2e8f5;
+      --text-muted: #6a7a96;
+      --accent-1: #3d7aff;
+      --accent-2: #6b5ef8;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --navbar-h: 62px;
+    }
+
+    /* ==========================================
+       LIGHT THEME OVERRIDES
+       ========================================== */
+    body.light-theme {
+      --bg: #f0f4ff;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-border: rgba(61, 122, 255, 0.18);
+      --text-main: #0f172a;
+      --text-muted: #4b5880;
+      --accent-1: #2563eb;
+      --accent-2: #4f46e5;
+    }
+    body.light-theme {
+      background: var(--bg);
+    }
+    body.light-theme::before {
+      background:
+        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(99, 179, 237, 0.12) 0%, transparent 68%),
+        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(100, 149, 255, 0.10) 0%, transparent 68%),
+        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(200, 220, 255, 0.15) 0%, transparent 70%),
+        linear-gradient(180deg, #eef2ff 0%, #f0f4ff 100%);
+    }
+    body.light-theme .navbar {
+      background: rgba(240, 244, 255, 0.88);
+      border-bottom: 1px solid rgba(61, 122, 255, 0.12);
+    }
+    body.light-theme .site-footer {
+      background: rgba(230, 236, 255, 0.5);
+      border-top: 1px solid rgba(61, 122, 255, 0.12);
+    }
+    body.light-theme .feat-item {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(61, 122, 255, 0.12);
+    }
+    body.light-theme .feat-item:hover {
+      border-color: rgba(61, 122, 255, 0.3);
+    }
+
+    /* ==========================================
+       THEME TOGGLE BUTTON
+       ========================================== */
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      background: rgba(61, 122, 255, 0.18);
+      border-color: rgba(61, 122, 255, 0.35);
+      transform: scale(1.1);
+    }
+    body.light-theme .theme-toggle {
+      border-color: rgba(61, 122, 255, 0.2);
+      background: rgba(61, 122, 255, 0.08);
+    }
+
+    /* ==========================================
+       PAGE TITLES & GRADIENT HEADINGS
+       ========================================== */
+    .page-title {
+      font-size: 38px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 30%, #a0b8ff 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    body.light-theme .page-title {
+      background: linear-gradient(135deg, #0f172a 30%, #2563eb 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title-main {
+      background: linear-gradient(135deg, #fff 30%, #a0b8ff 70%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    body.light-theme .hero-title-main {
+      background: linear-gradient(135deg, #0f172a 30%, #2563eb 80%, #4f46e5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    body.light-theme .chat-panel {
+      background: var(--panel);
+      box-shadow: 0 24px 64px rgba(61, 122, 255, 0.08);
+    }
+    body.light-theme .bub-bot {
+      background: rgba(61, 122, 255, 0.08);
+      border-color: rgba(61, 122, 255, 0.15);
+    }
+    body.light-theme .ch-form input {
+      background: rgba(61, 122, 255, 0.04);
+    }
+    body.light-theme .login-modal-content {
+      background: #ffffff;
+      border-color: rgba(61, 122, 255, 0.22);
+      box-shadow: 0 30px 80px rgba(0, 0, 100, 0.15);
+    }
+    body.light-theme .login-modal-content input {
+      background: #f8fafc;
+      border-color: rgba(61, 122, 255, 0.15);
+      color: #0f172a;
+    }
+
+    /* ==========================================
+       RESET & BASE STYLES
+       ========================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ==========================================
+       BACKGROUND ANIMATED/STATIC GLOWS
+       ========================================== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(0, 185, 145, 0.17) 0%, transparent 68%),
+        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(50, 90, 255, 0.13) 0%, transparent 68%),
+        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 45, 110, 0.28) 0%, transparent 70%),
+        linear-gradient(180deg, #070d1e 0%, #040810 100%);
+    }
+
+    .navbar, main, .site-footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================================
+       NAVBAR
+       ========================================== */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: var(--navbar-h);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 11, 22, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.015em;
+    }
+
+    .brand-orb {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a7bff, #7a5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(74, 123, 255, 0.55);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 13.5px;
+      font-weight: 450;
+      color: var(--text-muted);
+    }
+
+    .nav-links a {
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text-main);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-ghost {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-main);
+    }
+
+    /* ==========================================
+       BUTTONS
+       ========================================== */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 22px -4px rgba(61, 122, 255, 0.60);
+      transition: transform 0.18s, box-shadow 0.18s;
+      letter-spacing: -0.01em;
+      font-family: inherit;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px -4px rgba(61, 122, 255, 0.80);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.44;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-sm {
+      padding: 9px 18px;
+      font-size: 13px;
+    }
+
+    /* ==========================================
+       HERO
+       ========================================== */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 28px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent-1);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      line-height: 1.10;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin-bottom: 18px;
+      background: linear-gradient(155deg, #ffffff 35%, #a0b8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.70;
+      max-width: 540px;
+      margin: 0 auto 32px;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-cta .btn-primary {
+      padding: 13px 30px;
+      font-size: 14.5px;
+    }
+
+    /* ==========================================
+       SHOWCASE SECTION
+       ========================================== */
+    .showcase {
+      display: grid;
+      grid-template-columns: 230px 1fr 230px;
+      align-items: center;
+      gap: 0;
+      max-width: 1060px;
+      margin: 50px auto 0;
+      padding: 0 20px;
+    }
+
+    .sc-card {
+      background: rgba(8, 16, 34, 0.75);
+      border: 1px solid rgba(70, 120, 255, 0.15);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .sc-card h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      letter-spacing: -0.01em;
+    }
+
+    .sc-card > .sc-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .sc-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.55;
+    }
+
+    /* Image generation card */
+    .im-wrap {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .im-prompt {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .im-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      flex-shrink: 0;
+    }
+
+    .im-prompt span {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .im-canvas {
+      height: 64px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, rgba(50, 100, 255, 0.28), rgba(100, 80, 240, 0.20));
+    }
+
+    .im-chips {
+      display: flex;
+      gap: 5px;
+      margin-top: 7px;
+    }
+
+    .chip {
+      font-size: 9px;
+      background: rgba(61, 122, 255, 0.16);
+      color: #88b4ff;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-weight: 600;
+    }
+
+    /* Document chat card */
+    .doc-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .doc-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 9px;
+      padding: 9px 11px;
+    }
+
+    .doc-icon {
+      width: 30px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .doc-icon.pdf {
+      background: rgba(255, 70, 70, 0.18);
+      color: #ff9090;
+    }
+
+    .doc-icon.docx {
+      background: rgba(50, 120, 255, 0.18);
+      color: #88b4ff;
+    }
+
+    .doc-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .doc-name {
+      font-size: 11px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .doc-size {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ==========================================
+       CENTRE BOT SECTION
+       ========================================== */
+    .bot-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 380px;
+    }
+
+    .bot-ambient {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(35, 90, 255, 0.24) 0%, rgba(20, 65, 200, 0.10) 45%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .bot-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -58%) rotate(0deg);
+      width: 310px;
+      height: 310px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(61, 122, 255, 0.20);
+      animation: spinRing 20s linear infinite;
+      pointer-events: none;
+    }
+
+    .bot-ring::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      box-shadow: 0 0 12px 4px rgba(61, 122, 255, 0.65);
+      transform: translateX(-50%);
+    }
+
+    @keyframes spinRing {
+      to { transform: translate(-50%, -58%) rotate(360deg); }
+    }
+
+    /* CSS Bot Character */
+    .bot-wrap {
+      position: relative;
+      z-index: 2;
+      animation: botFloat 3.8s ease-in-out infinite;
+      filter: drop-shadow(0 18px 36px rgba(40, 90, 255, 0.50));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @keyframes botFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .bot-antenna-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: -2px;
+    }
+
+    .bot-antenna-ball {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #b0d8ff, #5599ff);
+      box-shadow: 0 0 10px 4px rgba(80, 160, 255, 0.55);
+    }
+
+    .bot-antenna-stick {
+      width: 4px;
+      height: 22px;
+      background: linear-gradient(180deg, #80b0ff, #3366dd);
+      border-radius: 2px;
+    }
+
+    .bot-head {
+      width: 130px;
+      height: 96px;
+      background: linear-gradient(180deg, #6aaeff 0%, #2356d8 100%);
+      border-radius: 36px;
+      position: relative;
+      overflow: visible;
+      box-shadow: inset 0 6px 12px rgba(255, 255, 255, 0.22), inset 0 -4px 8px rgba(0, 0, 60, 0.30);
+    }
+
+    .bot-ear {
+      position: absolute;
+      top: 22px;
+      width: 10px;
+      height: 28px;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #4a80e8, #1d50c8);
+    }
+
+    .bot-ear.l { left: -10px; }
+    .bot-ear.r { right: -10px; }
+
+    .bot-visor {
+      position: absolute;
+      left: 17px;
+      right: 17px;
+      top: 30px;
+      height: 40px;
+      background: #060f20;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+    }
+
+    .bot-eye {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #c8e8ff, #44aaff 55%, #1a6cc8);
+      box-shadow: 0 0 10px 3px rgba(80, 180, 255, 0.55);
+      position: relative;
+    }
+
+    .bot-eye::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .bot-neck {
+      width: 32px;
+      height: 14px;
+      background: #1f50cc;
+      border-radius: 0 0 6px 6px;
+      margin: 0 auto;
+    }
+
+    .bot-body {
+      width: 160px;
+      height: 106px;
+      background: linear-gradient(180deg, #5b9fff 0%, #2e6aee 55%, #1a46b8 100%);
+      border-radius: 28px;
+      position: relative;
+      box-shadow: inset 0 6px 14px rgba(255, 255, 255, 0.20), inset 0 -4px 10px rgba(0, 0, 60, 0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bot-body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10px;
+      right: 10px;
+      height: 38px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent);
+      border-radius: 28px 28px 40px 40px;
+    }
+
+    .bot-badge {
+      width: 72px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: 2px;
+      z-index: 1;
+      text-shadow: 0 0 10px rgba(180, 210, 255, 0.6);
+    }
+
+    .bot-arm {
+      position: absolute;
+      top: 16px;
+      width: 26px;
+      height: 64px;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #5b9fff, #2e6aee);
+      box-shadow: inset 2px 0 6px rgba(255, 255, 255, 0.18);
+    }
+
+    .bot-arm.l { left: -30px; }
+    .bot-arm.r { right: -30px; }
+
+    .bot-shadow {
+      width: 90px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(20, 60, 180, 0.22);
+      margin: 4px auto 0;
+      filter: blur(2px);
+    }
+
+    /* Chat overlay card */
+    .chat-overlay {
+      position: absolute;
+      right: -16px;
+      top: 50%;
+      transform: translateY(-42%);
+      width: 172px;
+      background: rgba(5, 12, 26, 0.94);
+      border: 1px solid rgba(60, 110, 255, 0.22);
+      border-radius: 14px;
+      padding: 12px;
+      z-index: 4;
+      backdrop-filter: blur(14px);
+    }
+
+    .co-msg {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 7px;
+      align-items: flex-start;
+    }
+
+    .co-msg-r {
+      flex-direction: row-reverse;
+    }
+
+    .co-av {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .co-av-u {
+      background: rgba(255, 255, 255, 0.10);
+      color: var(--text-muted);
+    }
+
+    .co-bub {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 4px 10px 10px 10px;
+      padding: 6px 8px;
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    .co-bub-u {
+      background: rgba(61, 122, 255, 0.22);
+      color: #aac5ff;
+      border-radius: 10px 4px 10px 10px;
+    }
+
+    .co-btn {
+      display: block;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      border-radius: 999px;
+      padding: 5px 10px;
+      margin-top: 6px;
+      box-shadow: 0 4px 12px -2px rgba(61, 122, 255, 0.5);
+    }
+
+    .stage-cta {
+      margin-top: 18px;
+      position: relative;
+      z-index: 3;
+    }
+
+    /* ==========================================
+       FEATURE GRID
+       ========================================== */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 1060px;
+      margin: 58px auto 60px;
+      padding: 0 20px;
+    }
+
+    .feat-item {
+      background: rgba(8, 16, 34, 0.65);
+      border: 1px solid rgba(60, 110, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feat-item:hover {
+      border-color: rgba(60, 110, 255, 0.32);
+      transform: translateY(-2px);
+    }
+
+    .fi-ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(61, 122, 255, 0.13);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .feat-item h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .feat-item p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ==========================================
+       SITE FOOTER
+       ========================================== */
+    .site-footer {
+      text-align: center;
+      padding: 22px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ==========================================
+       CHAT PAGE PANEL
+       ========================================== */
+    .chat-page {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 44px 24px 60px;
+      min-height: calc(100vh - var(--navbar-h));
+    }
+
+    .chat-panel {
+      width: 100%;
+      max-width: 740px;
+      height: 72vh;
+      min-height: 480px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+
+    .ch-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--panel-border);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .ch-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+      animation: dp 2.2s ease infinite;
+    }
+
+    @keyframes dp {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
+      50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.06); }
+    }
+
+    .ch-status {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 400;
+      color: #22c55e;
+    }
+
+    .ch-msgs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ch-msgs::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .ch-msgs::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 2px;
+    }
+
+    .msg-row {
+      display: flex;
+    }
+
+    .msg-row-u {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 72%;
+      padding: 11px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .bub-bot {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-bottom-left-radius: 4px;
+    }
+
+    .bub-usr {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 6px 20px -6px rgba(61, 122, 255, 0.5);
+    }
+
+    .typing {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 14px 16px;
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: blink 1.3s infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.22s; }
+    .typing span:nth-child(3) { animation-delay: 0.44s; }
+
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.85); }
+      40% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .ch-form {
+      display: flex;
+      gap: 10px;
+      padding: 14px 16px;
+      border-top: 1px solid var(--panel-border);
+    }
+
+    .ch-form input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(60, 110, 255, 0.18);
+      border-radius: 999px;
+      padding: 11px 18px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+
+    .ch-form input:focus {
+      border-color: var(--accent-1);
+    }
+
+    .ch-form input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ==========================================
+       RESPONSIVE BREAKPOINTS
+       ========================================== */
+    @media (max-width: 960px) {
+      .showcase {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .chat-overlay {
+        display: none;
+      }
+      .feat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 0 18px;
+      }
+      .hero-title {
+        font-size: 34px;
+      }
+      .hero {
+        padding: 50px 18px 22px;
+      }
+      .feat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
+  <header class="navbar">
+    <a href="#!/" class="brand">
+      <span class="brand-orb">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <circle cx="9" cy="10" r="2.4" fill="white"/>
+          <circle cx="15" cy="10" r="2.4" fill="white"/>
+          <path d="M7 15.5c1.4 1.4 3.2 2 5 2s3.6-.6 5-2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      AIChatterbox
+    </a>
+    <nav class="nav-links">
+      <a href="#!/" ng-class="{active: isActive('/')}">Home</a>
+      <a href="#!/features" ng-class="{active: isActive('/features')}">Features</a>
+      <a href="#!/pricing" ng-class="{active: isActive('/pricing')}">Pricing</a>
+      <a href="#!/integrations" ng-class="{active: isActive('/integrations')}">Integrations</a>
+      <a href="#!/blog" ng-class="{active: isActive('/blog')}">Blog</a>
+    </nav>
+    <div class="nav-actions">
+      <!-- Dark / Light Theme Toggle -->
+      <button class="theme-toggle" ng-click="toggleTheme()" title="Toggle theme">
+        <span ng-if="!lightTheme">🌙</span>
+        <span ng-if="lightTheme">☀️</span>
+      </button>
+      <span ng-if="user" style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-right:4px;">Hi, {{user.name}}</span>
+      <a href="" ng-if="user" ng-click="logout()" class="btn-ghost">Logout</a>
+      <a href="" ng-if="!user" ng-click="openLoginModal(false)" class="btn-ghost">Sign in</a>
+      <a href="" ng-if="!user" ng-click="openLoginModal(true)" class="btn-primary btn-sm">Sign Up &#x2197;</a>
+      <a href="#!/chat" class="btn-primary btn-sm" style="background:var(--accent-1); box-shadow:none;">Chat Console &#x2197;</a>
+    </div>
+  </header>
+
+  <!-- Angular view router outlet -->
+  <main ng-view></main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="site-footer">
+    <div style="display:flex; justify-content:center; gap:20px; margin-bottom:12px; font-size:12px; color:var(--text-muted);">
+      <a href="#!/" style="hover:color:#fff;">Home</a> &bull;
+      <a href="#!/features">Features</a> &bull;
+      <a href="#!/pricing">Pricing</a> &bull;
+      <a href="#!/integrations">Integrations</a> &bull;
+      <a href="#!/blog">Blog</a> &bull;
+      <a href="#!/chat">Chat Console</a>
+    </div>
+    <p>&copy; 2026 AIChatterbox. All rights reserved.</p>
+  </footer>
+
+  <!-- ==========================================
+       LOGIN / SIGNUP MODAL
+       ========================================== -->
+  <div class="login-modal-overlay" ng-if="showLoginModal" ng-click="closeLoginModal($event)" id="modal-overlay">
+    <div class="login-modal-content">
+      <button class="modal-close" ng-click="showLoginModal = false">&times;</button>
+      
+      <div ng-if="!isSignUp">
+        <h2>Welcome Back</h2>
+        <p class="modal-sub">Sign in to your AIChatterbox account to continue.</p>
+        <form ng-submit="submitLogin()">
+          <input type="email" ng-model="loginData.email" placeholder="Email Address" required />
+          <input type="password" ng-model="loginData.password" placeholder="Password" required />
+          <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:10px;">
+            {{isSubmittingAuth ? 'Signing in...' : 'Sign In'}}
+          </button>
+        </form>
+        <p class="modal-toggle-text">Don't have an account? <a href="" ng-click="toggleAuthMode()">Sign up</a></p>
+      </div>
+
+      <div ng-if="isSignUp">
+        <h2>Create Account</h2>
+        <p class="modal-sub">Join AIChatterbox and start talking smarter.</p>
+        <form ng-submit="submitSignUp()">
+          <input type="text" ng-model="signUpData.name" placeholder="Full Name" required />
+          <input type="email" ng-model="signUpData.email" placeholder="Email Address" required />
+          <input type="password" ng-model="signUpData.password" placeholder="Password" required />
+          <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:10px;">
+            {{isSubmittingAuth ? 'Creating account...' : 'Create Account'}}
+          </button>
+        </form>
+        <p class="modal-toggle-text">Already have an account? <a href="" ng-click="toggleAuthMode()">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HOME PAGE TEMPLATE (INLINE)
+       ========================================== -->
+  <script type="text/ng-template" id="home.html">
+    <!-- HERO SECTION -->
+    <section style="position:relative;display:flex;align-items:center;min-height:calc(100vh - var(--navbar-h) - 40px);padding:60px 48px;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.04);background:var(--bg);max-width:1300px;margin:0 auto;">
+      <!-- Glowing background orbs -->
+      <div style="position:absolute;top:60px;left:10%;width:180px;height:180px;background:rgba(61,122,255,0.06);border-radius:50%;filter:blur(50px);animation:floatA 8s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
+      <div style="position:absolute;bottom:60px;right:10%;width:220px;height:220px;background:rgba(107,94,248,0.05);border-radius:50%;filter:blur(60px);animation:floatB 10s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
+
+      <!-- Decoupled Blended Background Image (Fades all 4 edges to #060b16) -->
+      <div style="position:absolute;top:0;right:0;bottom:0;width:55%;z-index:1;pointer-events:none;overflow:hidden;">
+        <div style="position:relative;width:100%;height:100%;background-image:url('images/cute_robot.png');background-size:cover;background-position:center right;background-repeat:no-repeat;">
+          <!-- Fade left edge -->
+          <div style="position:absolute;top:0;left:0;bottom:0;width:25%;background:linear-gradient(90deg, var(--bg) 0%, transparent 100%);"></div>
+          <!-- Fade right edge -->
+          <div style="position:absolute;top:0;right:0;bottom:0;width:15%;background:linear-gradient(270deg, var(--bg) 0%, transparent 100%);"></div>
+          <!-- Fade top edge -->
+          <div style="position:absolute;top:0;left:0;right:0;height:15%;background:linear-gradient(180deg, var(--bg) 0%, transparent 100%);"></div>
+          <!-- Fade bottom edge -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:20%;background:linear-gradient(0deg, var(--bg) 0%, transparent 100%);"></div>
+        </div>
+      </div>
+
+      <!-- Content Container (Left Side Unique Simple Accent Style) -->
+      <div style="position:relative;z-index:3;max-width:620px;text-align:left;display:flex;flex-direction:column;gap:18px;border-left:2px solid rgba(61,122,255,0.22);padding-left:24px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(61,122,255,0.08);border:1px solid rgba(61,122,255,0.18);border-radius:99px;padding:5px 14px;font-size:11px;font-weight:600;color:#7ba8ff;letter-spacing:0.04em;align-self:flex-start;">
+          <span style="width:5px;height:5px;border-radius:50%;background:#3d7aff;box-shadow:0 0 6px #3d7aff;display:inline-block;"></span>
+          Powered by Groq — The world's fastest AI inference engine
+        </div>
+
+        <h1 style="font-size:clamp(32px,4.8vw,52px);font-weight:800;line-height:1.15;letter-spacing:-0.03em;">
+          <span class="hero-title-main">Talk Smarter.</span><br/>
+          <span style="background:linear-gradient(135deg,#a0b8ff 0%,#3d7aff 50%,#6b5ef8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Think Faster.</span>
+        </h1>
+        <p style="font-size:clamp(13.5px,1.7vw,15.5px);color:var(--text-muted);line-height:1.65;max-width:500px;margin-bottom:6px;">
+          Experience effortless conversations, ultra-fast image generation, and intelligent document Q&amp;A all in one premium workspace.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="#!/chat" class="btn-primary" style="padding:12px 26px;font-size:13.5px;box-shadow:0 8px 30px rgba(61,122,255,0.4);">
+            Try for Free &rarr;
+          </a>
+          <a href="#!/features" class="btn-ghost" style="padding:12px 24px;font-size:13.5px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);">
+            Explore Features
+          </a>
+        </div>
+
+        <!-- Mini Stats -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;">
+          <div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-main);">2M+</div>
+            <div style="font-size:9.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;">Messages</div>
+          </div>
+          <div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-main);">&lt;0.8s</div>
+            <div style="font-size:9.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;">Speed</div>
+          </div>
+          <div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-main);">50K+</div>
+            <div style="font-size:9.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;">Users</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HORIZONTAL LOGO MARQUEE -->
+    <div style="overflow:hidden;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:14px 0;background:rgba(8,16,34,0.4);">
+      <div style="display:flex;gap:40px;width:max-content;">
+        <span ng-repeat="item in marqueeItems" style="font-size:13px;font-weight:600;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;">
+          <span style="font-size:16px;">{{item.emoji}}</span> {{item.text}}
+        </span>
+        <!-- duplicate items for full visual coverage -->
+        <span ng-repeat="item in marqueeItems" style="font-size:13px;font-weight:600;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;">
+          <span style="font-size:16px;">{{item.emoji}}</span> {{item.text}}
+        </span>
+      </div>
+    </div>
+
+    <!-- TABS INTERACTIVE PRODUCT DEMO -->
+    <section style="max-width:1000px;margin:80px auto;padding:0 24px;">
+      <p style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Experience the Power</p>
+      <h2 style="text-align:center;font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-0.02em;margin-bottom:44px;">Unified Workspace. Instant Results.</h2>
+
+      <!-- Tab Buttons -->
+      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:36px;flex-wrap:wrap;">
+        <button ng-repeat="tab in tabs" ng-click="$parent.activeTab = tab.id"
+          ng-style="$parent.activeTab === tab.id ? {'background':'linear-gradient(135deg,#3d7aff,#6b5ef8)','color':'#fff','border-color':'transparent'} : {'background':'rgba(255,255,255,0.04)','color':'var(--text-muted)','border-color':'rgba(255,255,255,0.08)'}"
+          style="border:1px solid;border-radius:999px;padding:10px 24px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;outline:none;">
+          {{tab.emoji}} {{tab.label}}
+        </button>
+      </div>
+
+      <!-- Chat Tab -->
+      <div ng-show="activeTab === 'chat'" style="display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;">
+        <div>
+          <h3 style="font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;">Smart AI conversations with zero delay.</h3>
+          <p style="color:var(--text-muted);font-size:14px;line-height:1.65;margin-bottom:20px;">
+            Powered by Groq's high-speed inference engine, our chatbot answers instantly, remembers your conversation context, and gives you clean, straight-to-the-point replies.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">
+            <div style="display:flex;gap:8px;align-items:center;font-size:13.5px;"><span style="color:#22c55e;">&#x2713;</span> Snappy &amp; short responses</div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:13.5px;"><span style="color:#22c55e;">&#x2713;</span> Context memory matching</div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:13.5px;"><span style="color:#22c55e;">&#x2713;</span> Markdown and code block ready</div>
+          </div>
+          <a href="#!/chat" class="btn-primary btn-sm">Open Chat Console &rarr;</a>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px;">
+          <div style="background:rgba(61,122,255,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
+            Hello! I'm AIChatterbox. What are we brainstorming today? 🚀
+          </div>
+          <div style="background:rgba(61,122,255,0.15);border-radius:12px 4px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;align-self:flex-end;color:var(--text-main);">
+            Write a 1-sentence sales pitch for a coding assistant.
+          </div>
+          <div style="background:rgba(61,122,255,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
+            Supercharge your development cycle with Antigravity, the AI coding companion that writes, tests, and refactors clean code in real-time. ⚡
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Creator Tab -->
+      <div ng-show="activeTab === 'image'" style="display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;">
+        <div>
+          <h3 style="font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;">Instant high-fidelity image generator.</h3>
+          <p style="color:var(--text-muted);font-size:14px;line-height:1.65;margin-bottom:20px;">
+            Describe any conceptual image, theme, or backdrop, and watch our generator create preview assets instantly for your projects.
+          </p>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <input type="text" ng-model="imagePrompt" placeholder="A futuristic neon city at dusk..." style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:12px;outline:none;" />
+            <button ng-click="generateImage(imagePrompt)" ng-disabled="isGeneratingImage || !imagePrompt" style="background:linear-gradient(135deg,#3d7aff,#6b5ef8);border:none;border-radius:8px;padding:8px 16px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;outline:none;">{{isGeneratingImage ? '...' : 'Generate'}}</button>
+          </div>
+          <div ng-if="generatedImageUrl" style="border-radius:12px;overflow:hidden;height:120px;background-image:url({{generatedImageUrl}});background-size:cover;background-position:center;border:1px solid rgba(61,122,255,0.2);"></div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;text-align:center;">
+          <div style="background:linear-gradient(135deg,rgba(61,122,255,0.12),rgba(107,94,248,0.1));border-radius:14px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:1px solid var(--panel-border);position:relative;overflow:hidden;">
+            <div style="font-size:36px;margin-bottom:6px;">🏙️</div>
+            <div style="position:absolute;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,0.65);padding:6px;border-radius:6px;font-size:11px;color:#fff;">
+              "A futuristic neon city at dusk"
+            </div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);">Real-time visuals matching your description tags.</span>
+        </div>
+      </div>
+
+      <!-- Document Q&A Tab -->
+      <div ng-show="activeTab === 'doc'" style="display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;">
+        <div>
+          <h3 style="font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;">Chat directly with your contracts &amp; reports.</h3>
+          <p style="color:var(--text-muted);font-size:14px;line-height:1.65;margin-bottom:20px;">
+            Upload PDF or Word files to have instant conversations based only on the document text. No manual page browsing required.
+          </p>
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
+            <input type="file" id="doc-upload-home" style="display:none;" onchange="angular.element(this).scope().uploadFile(this.files)" />
+            <button onclick="document.getElementById('doc-upload-home').click()" style="background:linear-gradient(135deg,#3d7aff,#6b5ef8);border:none;border-radius:8px;padding:10px 20px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;outline:none;">📄 Upload File</button>
+            <span style="font-size:11px;color:var(--text-muted);">PDF &bull; DOCX &bull; TXT</span>
+          </div>
+          <div ng-if="isUploading" style="font-size:12px;color:var(--text-muted);font-family:monospace;">Uploading &amp; indexing document...</div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:10px;">
+          <div ng-repeat="d in documents" style="display:flex;align-items:center;gap:10px;background:rgba(61,122,255,0.05);border-radius:10px;padding:8px 12px;border:1px solid var(--panel-border);">
+            <div style="width:30px;height:30px;border-radius:6px;background:rgba(61,122,255,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-1);">{{d.type | uppercase}}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{d.name}}</div>
+              <div style="font-size:10.5px;color:var(--text-muted);">{{d.size}} &bull; {{d.pages}} pages</div>
+            </div>
+            <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS TIMELINE -->
+    <section style="background:rgba(8,16,34,0.4);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:72px 24px;">
+      <div style="max-width:860px;margin:0 auto;text-align:center;">
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Easy Setup</p>
+        <h2 style="font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-0.02em;margin-bottom:50px;">Up and Running in 3 Steps</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;">
+          <div ng-repeat="step in howItWorks" style="text-align:center;padding:0 12px;">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3d7aff,#6b5ef8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;box-shadow:0 8px 24px rgba(61,122,255,0.4);color:#fff;">{{step.emoji}}</div>
+            <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;">{{step.title}}</h4>
+            <p style="font-size:12.5px;color:var(--text-muted);line-height:1.55;">{{step.desc}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS STRIP -->
+    <section style="max-width:1000px;margin:80px auto;padding:0 24px;">
+      <p style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Trusted Reviews</p>
+      <h2 style="text-align:center;font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-0.02em;margin-bottom:44px;">Loved by Developers &amp; Creators</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div ng-repeat="t in testimonials" style="background:var(--panel);border:1px solid var(--panel-border);border-radius:18px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;">
+          <div style="color:#f59e0b;font-size:12px;">★★★★★</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.6;font-style:italic;">"{{t.quote}}"</p>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:auto;">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3d7aff,#6b5ef8);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#fff;">{{t.initials}}</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;">{{t.name}}</div>
+              <div style="font-size:11px;color:var(--text-muted);">{{t.role}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CTA BANNER -->
+    <section style="max-width:860px;margin:0 auto 80px;padding:0 24px;">
+      <div style="background:linear-gradient(135deg,rgba(61,122,255,0.15) 0%,rgba(107,94,248,0.12) 100%);border:1px solid rgba(61,122,255,0.22);border-radius:24px;padding:50px 36px;text-align:center;">
+        <h2 style="font-size:32px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;">Ready to Talk Smarter?</h2>
+        <p style="font-size:14.5px;color:var(--text-muted);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;">Join 50,000+ users already supercharging their daily workflow with AIChatterbox.</p>
+        <a href="#!/chat" class="btn-primary" style="padding:13px 30px;font-size:14.5px;">Get Started Free</a>
+      </div>
+    </section>
+  </script>
+
+  <!-- ==========================================
+       CHAT PAGE TEMPLATE (INLINE)
+       ========================================== -->
+  <script type="text/ng-template" id="chat.html">
+    <section class="chat-page">
+      <div class="chat-panel">
+        <header class="ch-head">
+          <span class="ch-dot"></span>
+          AIChatterbox
+          <span class="ch-status">online</span>
+        </header>
+        <div class="ch-msgs">
+          <div class="msg-row" ng-repeat="m in messages" ng-class="{'msg-row-u': m.role === 'user'}">
+            <div class="bubble" ng-class="m.role === 'user' ? 'bub-usr' : 'bub-bot'">
+              {{m.text}}
+            </div>
+          </div>
+          <div class="msg-row" ng-if="isSending">
+            <div class="bubble bub-bot typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+        <form class="ch-form" ng-submit="sendMessage()">
+          <input type="text" ng-model="draft" placeholder="Type your message..." autofocus />
+          <button type="submit" class="btn-primary btn-sm" ng-disabled="!draft.trim()">Send &#x2197;</button>
+        </form>
+      </div>
+    </section>
+  </script>
+
+  <!-- FEATURES PAGE -->
+  <script type="text/ng-template" id="features.html">
+    <section style="max-width:900px;margin:60px auto;padding:0 24px;">
+      <p class="eyebrow" style="text-align:center;">What We Offer</p>
+      <h1 class="page-title">Packed With Powerful Features</h1>
+      <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Everything you need to communicate smarter, all in one place.</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+        <div class="feat-item" ng-repeat="f in allFeatures">
+          <div class="fi-ico" style="font-size:22px;">{{f.emoji}}</div>
+          <h4>{{f.title}}</h4>
+          <p>{{f.desc}}</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:50px;">
+        <a href="#!/chat" class="btn-primary" style="padding:13px 32px;font-size:15px;">Start Chatting Free</a>
+      </div>
+    </section>
+  </script>
+
+  <!-- PRICING PAGE -->
+  <script type="text/ng-template" id="pricing.html">
+    <section style="max-width:960px;margin:60px auto;padding:0 24px;">
+      <p class="eyebrow" style="text-align:center;">Pricing</p>
+      <h1 class="page-title">Simple, Transparent Pricing</h1>
+      <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">No hidden fees. Cancel anytime.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div ng-repeat="plan in plans" ng-style="{'background':'var(--panel)','border':'1px solid ' + (plan.highlight ? 'var(--accent-1)' : 'var(--panel-border)'),'border-radius':'20px','padding':'28px 22px','display':'flex','flex-direction':'column','align-items':'center','text-align':'center','gap':'10px'}">
+          <p style="font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">{{plan.name}}</p>
+          <div style="font-size:42px;font-weight:800;letter-spacing:-0.04em;">{{plan.price}}<span style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
+          <p style="font-size:13px;color:var(--text-muted);">{{plan.desc}}</p>
+          <ul style="list-style:none;text-align:left;margin:8px 0;padding:0;font-size:13px;color:var(--text-main);display:flex;flex-direction:column;gap:6px;width:100%;">
+            <li ng-repeat="feat in plan.features" style="display:flex;gap:6px;align-items:flex-start;"><span style="color:#22c55e;flex-shrink:0;">&#x2713;</span> {{feat}}</li>
+          </ul>
+          <a href="" ng-click="openLoginModal(true)" class="btn-primary btn-sm" style="margin-top:auto;width:100%;justify-content:center;">{{plan.cta}}</a>
+        </div>
+      </div>
+    </section>
+  </script>
+
+  <!-- INTEGRATIONS PAGE -->
+  <script type="text/ng-template" id="integrations.html">
+    <section style="max-width:900px;margin:60px auto;padding:0 24px;">
+      <p class="eyebrow" style="text-align:center;">Integrations</p>
+      <h1 class="page-title">Connect Everything You Use</h1>
+      <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">AIChatterbox plugs into your existing workflow seamlessly.</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+        <div ng-repeat="item in integrations" class="feat-item" style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:default;text-align:center;">
+          <div style="font-size:30px;">{{item.emoji}}</div>
+          <h4 style="font-size:13.5px;font-weight:700;">{{item.name}}</h4>
+          <p style="font-size:11.5px;color:var(--text-muted);">{{item.desc}}</p>
+        </div>
+      </div>
+    </section>
+  </script>
+
+  <!-- BLOG PAGE -->
+  <script type="text/ng-template" id="blog.html">
+    <section style="max-width:860px;margin:60px auto;padding:0 24px;">
+      <p class="eyebrow" style="text-align:center;">Blog</p>
+      <h1 class="page-title">AI Insights and Updates</h1>
+      <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Stay up to date with the latest in AI communication technology.</p>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div ng-repeat="post in blogPosts" class="feat-item" style="display:flex;gap:20px;align-items:flex-start;padding:24px 26px;border-radius:16px;">
+          <div style="font-size:28px;flex-shrink:0;width:52px;height:52px;background:rgba(61,122,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;">{{post.emoji}}</div>
+          <div>
+            <p style="font-size:11px;font-weight:600;color:var(--accent-1);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">{{post.category}} &bull; {{post.date}}</p>
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em;">{{post.title}}</h3>
+            <p style="font-size:13.5px;color:var(--text-muted);line-height:1.6;">{{post.excerpt}}</p>
+            <a href="" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:var(--accent-1);">Read More &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </script>
+
+  <!-- AngularJS Local Vendor Files -->
+  <script src="js/vendor/angular.min.js"></script>
+  <script src="js/vendor/angular-route.min.js"></script>
+
+  <script>
+    angular.module('aiChatterbox', ['ngRoute'])
+
+      .factory('$exceptionHandler', function() {
+        return function(exception, cause) {
+          console.error('AngularJS error:', exception, cause);
+        };
+      })
+
+      .constant('API_BASE_URL', '/api')
+
+      .config(['$routeProvider', '$locationProvider', function(rp, lp) {
+        lp.hashPrefix('!');
+        rp
+          .when('/',            { templateUrl: 'home.html',         controller: 'HomeCtrl'         })
+          .when('/chat',        { templateUrl: 'chat.html',         controller: 'ChatCtrl'         })
+          .when('/features',    { templateUrl: 'features.html',     controller: 'FeaturesCtrl'     })
+          .when('/pricing',     { templateUrl: 'pricing.html',      controller: 'PricingCtrl'      })
+          .when('/integrations',{ templateUrl: 'integrations.html', controller: 'IntegrationsCtrl' })
+          .when('/blog',        { templateUrl: 'blog.html',         controller: 'BlogCtrl'         })
+          .otherwise({ redirectTo: '/' });
+      }])
+
+      .run(['$rootScope', '$location', '$templateCache', function($rs, $loc, $tc) {
+        // Active nav helper
+        $rs.isActive = function(p) { return $loc.path() === p; };
+
+        // ── Theme Toggle ─────────────────────────────────────────
+        $rs.lightTheme = localStorage.getItem('aicb-theme') === 'light';
+        if ($rs.lightTheme) document.body.classList.add('light-theme');
+
+        $rs.toggleTheme = function() {
+          $rs.lightTheme = !$rs.lightTheme;
+          if ($rs.lightTheme) {
+            document.body.classList.add('light-theme');
+            localStorage.setItem('aicb-theme', 'light');
+          } else {
+            document.body.classList.remove('light-theme');
+            localStorage.setItem('aicb-theme', 'dark');
+          }
+        };
+
+        // Pre-populate all inline templates
+        ['home.html','chat.html','features.html','pricing.html','integrations.html','blog.html'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) $tc.put(id, el.innerHTML);
+        });
+
+        // ── Auth state ──────────────────────────────────────────
+        $rs.user = null;
+        $rs.showLoginModal = false;
+        $rs.isSignUp       = false;
+        $rs.isSubmittingAuth = false;
+        $rs.loginData  = { email: '', password: '' };
+        $rs.signUpData = { name: '', email: '', password: '' };
+
+        $rs.openLoginModal = function(signup) {
+          $rs.isSignUp       = !!signup;
+          $rs.showLoginModal = true;
+          $rs.loginData  = { email: '', password: '' };
+          $rs.signUpData = { name: '', email: '', password: '' };
+        };
+
+        $rs.closeLoginModal = function(evt) {
+          if (evt && evt.target.id !== 'modal-overlay') return;
+          $rs.showLoginModal = false;
+        };
+
+        $rs.toggleAuthMode = function() { $rs.isSignUp = !$rs.isSignUp; };
+
+        $rs.submitLogin = function() {
+          if (!$rs.loginData.email || !$rs.loginData.password) return;
+          $rs.isSubmittingAuth = true;
+          setTimeout(function() {
+            $rs.$apply(function() {
+              $rs.user = { name: $rs.loginData.email.split('@')[0] };
+              $rs.showLoginModal  = false;
+              $rs.isSubmittingAuth = false;
+            });
+          }, 900);
+        };
+
+        $rs.submitSignUp = function() {
+          if (!$rs.signUpData.name || !$rs.signUpData.email || !$rs.signUpData.password) return;
+          $rs.isSubmittingAuth = true;
+          setTimeout(function() {
+            $rs.$apply(function() {
+              $rs.user = { name: $rs.signUpData.name };
+              $rs.showLoginModal  = false;
+              $rs.isSubmittingAuth = false;
+            });
+          }, 900);
+        };
+
+        $rs.logout = function() { $rs.user = null; };
+      }])
+
+      // ── HOME ────────────────────────────────────────────────────
+      .controller('HomeCtrl', ['$scope', '$http', '$timeout', 'API_BASE_URL', function($s, $http, $timeout, API) {
+        $s.features = [
+          { title: 'Create Stunning Images With AI', text: 'Describe anything and generate high-quality visuals in seconds.', icon: 'image' },
+          { title: 'Chat Naturally, Anytime',        text: 'Ask questions, brainstorm, or get quick answers from a smart bot.', icon: 'chat' },
+          { title: 'Chat With Any Document',         text: 'Upload a file and get instant answers grounded in its content.', icon: 'doc' }
+        ];
+
+        // Tabs logic for product showcase
+        $s.tabs = [
+          { id: 'chat',  label: 'Conversations', emoji: '💬' },
+          { id: 'image', label: 'Image Creator', emoji: '🖼️' },
+          { id: 'doc',   label: 'Document Q&A',  emoji: '📄' }
+        ];
+        $s.activeTab = 'chat';
+
+        // Scrolling marquee items
+        $s.marqueeItems = [
+          { emoji: '⚡', text: 'Lightning fast Groq engine' },
+          { emoji: '🔒', text: 'End-to-end user privacy' },
+          { emoji: '🖼️', text: 'Stunning 4K AI images' },
+          { emoji: '📄', text: 'Intelligent PDF analysis' },
+          { emoji: '💬', text: 'Snappy context-aware replies' }
+        ];
+
+        // How it works steps
+        $s.howItWorks = [
+          { emoji: '👤', title: '1. Create Account', desc: 'Sign up in under 10 seconds for a free-tier plan.' },
+          { emoji: '⚙️', title: '2. Select Feature', desc: 'Choose between AI Chat, image generation, or Doc Upload.' },
+          { emoji: '✨', title: '3. Get Answers', desc: 'Receive instant results powered by state-of-the-art models.' }
+        ];
+
+        // User Testimonials
+        $s.testimonials = [
+          { quote: 'AIChatterbox completely replaced my generic AI chat. The speed is mind-blowing.', name: 'Aris Thorne', role: 'Software Engineer', initials: 'AT' },
+          { quote: 'Uploading legal contracts and querying specific clauses has saved me hours of manual reading.', name: 'Clara Vance', role: 'Product Manager', initials: 'CV' },
+          { quote: 'The image creator is brilliant. I get high quality assets for my blog posts in two clicks.', name: 'Devon Lee', role: 'Content Creator', initials: 'DL' }
+        ];
+
+        $s.imagePrompt = 'A futuristic neon city';
+        $s.isGeneratingImage = false;
+        $s.generatedImageUrl = '';
+
+        $s.generateImage = function(prompt) {
+          if (!prompt || $s.isGeneratingImage) return;
+          $s.isGeneratingImage = true;
+          $http.post(API + '/chat/image-prompt', { prompt: prompt })
+            .then(function(res) {
+              var kw = res.data.keyword || 'abstract';
+              $s.generatedImageUrl = 'https://loremflickr.com/320/240/' + encodeURIComponent(kw) + '?random=' + Date.now();
+            })
+            .catch(function() {
+              $s.generatedImageUrl = 'https://loremflickr.com/320/240/abstract?random=' + Date.now();
+            })
+            .finally(function() { $s.isGeneratingImage = false; });
+        };
+
+        $s.documents = [
+          { name: 'Research_paper.pdf', size: '2.4 MB', pages: 48, type: 'pdf' },
+          { name: 'Contract_2026.docx', size: '840 KB', pages: 12, type: 'docx' }
+        ];
+        $s.isUploading = false;
+        $s.uploadFile = function(files) {
+          if (!files || !files.length) return;
+          var f = files[0];
+          $s.isUploading = true;
+          $s.$apply();
+          $timeout(function() {
+            var ext = f.name.split('.').pop().toLowerCase();
+            if (ext !== 'pdf' && ext !== 'docx') ext = 'pdf';
+            $s.documents.push({ name: f.name, size: (f.size / 1048576).toFixed(1) + ' MB', pages: Math.floor(Math.random()*20)+1, type: ext });
+            $s.isUploading = false;
+          }, 1400);
+        };
+
+        $s.showAddFeatureForm = false;
+        $s.newFeature = { title: '', text: '', icon: 'chat' };
+        $s.addFeature = function(feat) {
+          if (!feat.title || !feat.text) return;
+          $s.features.push({ title: feat.title, text: feat.text, icon: feat.icon });
+          $s.newFeature = { title: '', text: '', icon: 'chat' };
+          $s.showAddFeatureForm = false;
+        };
+      }])
+
+      // ── CHAT ────────────────────────────────────────────────────
+      .controller('ChatCtrl', ['$scope', '$http', '$timeout', 'API_BASE_URL', function($s, $http, $timeout, API) {
+        $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Ask me anything to get started." }];
+        $s.draft = '';
+        $s.isSending = false;
+
+        $s.sendMessage = function() {
+          var txt = ($s.draft || '').trim();
+          if (!txt || $s.isSending) return;
+          $s.messages.push({ role: 'user', text: txt });
+          $s.draft = '';
+          $s.isSending = true;
+          $timeout(function() {
+            var msgs = document.getElementById('chat-messages-list');
+            if (msgs) msgs.scrollTop = msgs.scrollHeight;
+          }, 50);
+          $http.post(API + '/chat', { message: txt, history: $s.messages })
+            .then(function(r) { $s.messages.push({ role: 'bot', text: r.data.reply }); })
+            .catch(function()  { $s.messages.push({ role: 'bot', text: "Sorry, couldn't reach the server." }); })
+            .finally(function() {
+              $s.isSending = false;
+              $timeout(function() {
+                var msgs = document.getElementById('chat-messages-list');
+                if (msgs) msgs.scrollTop = msgs.scrollHeight;
+              }, 60);
+            });
+        };
+      }])
+
+      // ── FEATURES PAGE ────────────────────────────────────────────
+      .controller('FeaturesCtrl', ['$scope', function($s) {
+        $s.allFeatures = [
+          { emoji: '🖼️', title: 'AI Image Generation',    desc: 'Describe a scene in natural language and get a stunning visual instantly.' },
+          { emoji: '💬', title: 'Smart Conversations',    desc: 'Context-aware chat that actually remembers what you said.' },
+          { emoji: '📄', title: 'Document Q&A',           desc: 'Upload PDFs, Word files and ask questions about their content.' },
+          { emoji: '🚀', title: 'Blazing Fast Responses', desc: 'Powered by Groq — the fastest inference hardware on the planet.' },
+          { emoji: '🔓', title: 'Secure & Private',       desc: 'Your data stays yours. We never train on your conversations.' },
+          { emoji: '🌐', title: 'Multi-Language',         desc: 'Chat naturally in English, Spanish, French, Hindi, and more.' }
+        ];
+      }])
+
+      // ── PRICING PAGE ────────────────────────────────────────────
+      .controller('PricingCtrl', ['$scope', function($s) {
+        $s.plans = [
+          { name: 'Free',    price: '$0',  desc: 'Perfect for personal use.', highlight: false, cta: 'Get Started',
+            features: ['50 messages / month', 'Basic AI responses', '1 document upload', 'Community support'] },
+          { name: 'Pro',     price: '$12', desc: 'For power users and creators.', highlight: true,  cta: 'Start Pro Trial',
+            features: ['Unlimited messages', 'Priority AI responses', 'Unlimited uploads', 'AI image generation', 'Email support'] },
+          { name: 'Team',    price: '$39', desc: 'Built for growing teams.', highlight: false, cta: 'Contact Sales',
+            features: ['Everything in Pro', 'Up to 10 members', 'Team dashboard', 'API access', 'Dedicated support'] }
+        ];
+      }])
+
+      // ── INTEGRATIONS PAGE ────────────────────────────────────────
+      .controller('IntegrationsCtrl', ['$scope', function($s) {
+        $s.integrations = [
+          { emoji: '📋', name: 'Notion',      desc: 'Sync chats and summaries directly into your workspace.' },
+          { emoji: '👥', name: 'Slack',       desc: 'Get AI responses right inside your Slack channels.' },
+          { emoji: '📧', name: 'Gmail',       desc: 'Summarise, draft and manage emails with AI assistance.' },
+          { emoji: '💾', name: 'Google Drive',desc: 'Upload and query your Drive documents instantly.' },
+          { emoji: '📄', name: 'Dropbox',     desc: 'Connect your Dropbox files for document Q&A.' },
+          { emoji: '📱', name: 'WhatsApp',    desc: 'Chat with the AI right from WhatsApp.' },
+          { emoji: '🆕', name: 'Zapier',      desc: 'Build automated workflows with 5,000+ apps.' },
+          { emoji: '🔗', name: 'REST API',    desc: 'Integrate AIChatterbox into any product via our API.' }
+        ];
+      }])
+
+      // ── BLOG PAGE ────────────────────────────────────────────────
+      .controller('BlogCtrl', ['$scope', function($s) {
+        $s.blogPosts = [
+          { emoji: '🚀', category: 'AI News',  date: 'Jul 15, 2026', title: 'Why Groq Changes Everything About AI Speed',
+            excerpt: 'We switched our inference engine to Groq and cut response times by 10x. Here is what that means for your experience.' },
+          { emoji: '💡', category: 'Tips',     date: 'Jul 10, 2026', title: '5 Prompts That Get the Best Answers From AIChatterbox',
+            excerpt: 'Good prompts get good answers. We tested hundreds of patterns and distilled them into five simple templates.' },
+          { emoji: '📄', category: 'Feature',  date: 'Jul 3, 2026',  title: 'Document Chat Is Here — Ask Your PDFs Anything',
+            excerpt: 'Our new document Q&A feature lets you upload any PDF or Word file and have a real conversation with its content.' },
+          { emoji: '🔓', category: 'Security', date: 'Jun 28, 2026', title: 'How We Keep Your Conversations Private',
+            excerpt: 'We explain exactly how your data is handled, stored, and never used to train AI models.' }
+        ];
+      }]);
+  </script>
+
+  <style>
+    /* ── Modal ─────────────────────────────────────────────────── */
+    .login-modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-modal-content {
+      background: #0b1527;
+      border: 1px solid rgba(70,120,255,0.28);
+      border-radius: 22px;
+      padding: 38px 36px;
+      width: 100%; max-width: 400px;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    }
+    .login-modal-content h2 {
+      font-size: 22px; font-weight: 800;
+      letter-spacing: -0.03em; margin-bottom: 6px;
+    }
+    .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .login-modal-content form {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .login-modal-content input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(70,120,255,0.20);
+      border-radius: 10px; padding: 12px 16px;
+      color: var(--text-main); font-size: 14px;
+      font-family: inherit; outline: none;
+      transition: border-color 0.18s;
+    }
+    .login-modal-content input:focus { border-color: var(--accent-1); }
+    .modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 22px;
+      cursor: pointer; line-height: 1;
+      transition: color 0.15s;
+    }
+    .modal-close:hover { color: var(--text-main); }
+    .modal-toggle-text {
+      text-align: center; font-size: 13px;
+      color: var(--text-muted); margin-top: 16px;
+    }
+    .modal-toggle-text a { color: var(--accent-1); font-weight: 600; }
+    /* Footer links */
+    .site-footer a { color: var(--text-muted); transition: color 0.15s; }
+    .site-footer a:hover { color: var(--text-main); }
+  </style>
+
+</body>
+</html>
+
