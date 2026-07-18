@@ -308,6 +308,107 @@
       gap: 14px;
     }
 
+    /* ==========================================
+       HAMBURGER BUTTON (mobile only)
+       ========================================== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.06); }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--text-main);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ==========================================
+       MOBILE RESPONSIVE
+       ========================================== */
+    @media (max-width: 768px) {
+      /* Navbar */
+      .navbar { padding: 0 18px; position: relative; flex-wrap: wrap; height: auto; min-height: var(--navbar-h); }
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        padding: 8px 0 16px;
+        border-top: 1px solid var(--panel-border);
+        margin-top: 4px;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 11px 4px; font-size: 15px; }
+      .nav-actions {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding-bottom: 14px;
+      }
+      .nav-actions.open { display: flex; }
+      .nav-actions .btn-primary,
+      .nav-actions .btn-ghost { text-align: center; justify-content: center; width: 100%; }
+
+      /* Hero section */
+      section[style*="display:flex;align-items:center"] {
+        flex-direction: column !important;
+        padding: 40px 20px !important;
+        min-height: unset !important;
+      }
+
+      /* Feature grids */
+      .feat-grid { grid-template-columns: 1fr !important; padding: 0 16px; }
+
+      /* Generic grids inside sections */
+      div[style*="grid-template-columns:repeat(2"],
+      div[style*="grid-template-columns:repeat(3"],
+      div[style*="grid-template-columns:repeat(4"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Pricing - allow 1 col */
+      div[style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+
+      /* Chat panel */
+      .chat-page { padding: 20px 12px 40px; }
+      .chat-panel { height: 80vh; }
+
+      /* Page sections */
+      section { padding: 40px 16px !important; }
+
+      /* Page titles */
+      .page-title { font-size: 28px !important; }
+
+      /* Modal */
+      .login-modal-content { padding: 28px 20px; margin: 0 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar { padding: 0 14px; }
+      .page-title { font-size: 24px !important; }
+      .chat-panel { height: 85vh; }
+    }
+
     .btn-ghost {
       font-size: 13.5px;
       color: var(--text-muted);
@@ -1122,14 +1223,20 @@
       </span>
       AIChatterbox
     </a>
-    <nav class="nav-links">
-      <a href="#!/" ng-class="{active: isActive('/')}">Home</a>
-      <a href="#!/features" ng-class="{active: isActive('/features')}">Features</a>
-      <a href="#!/pricing" ng-class="{active: isActive('/pricing')}">Pricing</a>
-      <a href="#!/integrations" ng-class="{active: isActive('/integrations')}">Integrations</a>
-      <a href="#!/blog" ng-class="{active: isActive('/blog')}">Blog</a>
+    <!-- Hamburger (mobile) -->
+    <button class="hamburger" ng-class="{open: menuOpen}" ng-click="toggleMenu()" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="nav-links" ng-class="{open: menuOpen}">
+      <a href="#!/" ng-class="{active: isActive('/')}" ng-click="closeMenu()">Home</a>
+      <a href="#!/features" ng-class="{active: isActive('/features')}" ng-click="closeMenu()">Features</a>
+      <a href="#!/pricing" ng-class="{active: isActive('/pricing')}" ng-click="closeMenu()">Pricing</a>
+      <a href="#!/integrations" ng-class="{active: isActive('/integrations')}" ng-click="closeMenu()">Integrations</a>
+      <a href="#!/blog" ng-class="{active: isActive('/blog')}" ng-click="closeMenu()">Blog</a>
     </nav>
-    <div class="nav-actions">
+    <div class="nav-actions" ng-class="{open: menuOpen}">
       <!-- Dark / Light Theme Toggle -->
       <button class="theme-toggle" ng-click="toggleTheme()" title="Toggle theme">
         <span ng-if="!lightTheme">🌙</span>
@@ -1547,6 +1654,18 @@
       .run(['$rootScope', '$location', '$templateCache', function($rs, $loc, $tc) {
         // Active nav helper
         $rs.isActive = function(p) { return $loc.path() === p; };
+
+        // ── Scroll to top on every route change ──────────────────
+        $rs.$on('$routeChangeSuccess', function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ── Mobile hamburger menu ─────────────────────────────────
+        $rs.menuOpen = false;
+        $rs.toggleMenu = function() { $rs.menuOpen = !$rs.menuOpen; };
+        $rs.closeMenu  = function() { $rs.menuOpen = false; };
+        // Close menu on route change
+        $rs.$on('$routeChangeSuccess', function() { $rs.menuOpen = false; });
 
         // ── Theme Toggle ─────────────────────────────────────────
         $rs.lightTheme = localStorage.getItem('aicb-theme') === 'light';
