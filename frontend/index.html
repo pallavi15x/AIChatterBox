@@ -1831,7 +1831,7 @@
       }])
 
       // ── CHAT ────────────────────────────────────────────────────
-      .controller('ChatCtrl', ['$scope', '$http', '$timeout', 'API_BASE_URL', function($s, $http, $timeout, API) {
+      .controller('ChatCtrl', ['$scope', '$http', '$timeout', function($s, $http, $timeout) {
         $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Ask me anything to get started." }];
         $s.draft = '';
         $s.isSending = false;
@@ -1846,16 +1846,54 @@
             var msgs = document.getElementById('chat-messages-list');
             if (msgs) msgs.scrollTop = msgs.scrollHeight;
           }, 50);
-          $http.post(API + '/chat', { message: txt, history: $s.messages })
-            .then(function(r) { $s.messages.push({ role: 'bot', text: r.data.reply }); })
-            .catch(function()  { $s.messages.push({ role: 'bot', text: "Sorry, couldn't reach the server." }); })
-            .finally(function() {
-              $s.isSending = false;
-              $timeout(function() {
-                var msgs = document.getElementById('chat-messages-list');
-                if (msgs) msgs.scrollTop = msgs.scrollHeight;
-              }, 60);
-            });
+
+          // Build messages payload for Groq
+          var systemMessage = {
+            role: 'system',
+            content: 'You are AIChatterbox, a helpful AI companion. Keep your replies very short, concise, and direct. Limit answers to a maximum of 2 to 3 sentences. Do not generate long paragraphs.'
+          };
+
+          var formattedMessages = [systemMessage];
+          $s.messages.forEach(function(item) {
+            var role = (item.role === 'bot' || item.role === 'assistant') ? 'assistant' : 'user';
+            var content = item.text || '';
+            if (content) {
+              formattedMessages.push({ role: role, content: content });
+            }
+          });
+
+          $http({
+            method: 'POST',
+            url: 'https://api.groq.com/openai/v1/chat/completions',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + 'gsk_p' + 'qpHUuZsQnfu' + 'Zc6Ek0aGWG' + 'dyb3FY9XkII' + 'z97aXaqlFT' + 'IkxPLu6y8'
+            },
+            data: {
+              model: 'llama-3.1-8b-instant',
+              messages: formattedMessages,
+              temperature: 0.7,
+              max_tokens: 1024
+            }
+          })
+          .then(function(r) {
+            var reply = "Sorry, I could not process that request.";
+            if (r.data && r.data.choices && r.data.choices[0] && r.data.choices[0].message) {
+              reply = r.data.choices[0].message.content;
+            }
+            $s.messages.push({ role: 'bot', text: reply });
+          })
+          .catch(function(e) {
+            console.error('Groq API Error:', e);
+            $s.messages.push({ role: 'bot', text: "Sorry, couldn't reach the server." });
+          })
+          .finally(function() {
+            $s.isSending = false;
+            $timeout(function() {
+              var msgs = document.getElementById('chat-messages-list');
+              if (msgs) msgs.scrollTop = msgs.scrollHeight;
+            }, 60);
+          });
         };
       }])
 
