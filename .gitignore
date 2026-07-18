@@ -1,4 +1,4 @@
-AIChatterbox/backend/.env
-AIChatterbox/backend/node_modules/
+backend/.env
+backend/node_modules/
 .DS_Store
 *.log
