@@ -1637,7 +1637,15 @@
         };
       })
 
-      .constant('API_BASE_URL', '/api')
+      .constant('API_BASE_URL', (function() {
+        // Local dev → use same-origin /api (Express serves frontend too)
+        // GitHub Pages / any other host → use the deployed Render backend
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+          return '/api';
+        }
+        return 'https://aichatterbox-backend.onrender.com/api';
+      })())
 
       .config(['$routeProvider', '$locationProvider', function(rp, lp) {
         lp.hashPrefix('!');
