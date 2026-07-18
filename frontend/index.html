@@ -9,19 +9,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     /* ==========================================
        TOKENS & VARIABLES
        ========================================== */
     :root {
-      --bg: #060b16;
-      --panel: rgba(8, 16, 34, 0.88);
-      --panel-border: rgba(70, 120, 255, 0.18);
-      --text-main: #e2e8f5;
-      --text-muted: #6a7a96;
-      --accent-1: #3d7aff;
-      --accent-2: #6b5ef8;
+      --bg: #08050e;
+      --panel: rgba(13, 9, 22, 0.90);
+      --panel-border: rgba(168, 85, 247, 0.16);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-1: #a855f7;
+      --accent-2: #14b8a6;
       --radius: 14px;
       --radius-lg: 22px;
       --navbar-h: 62px;
@@ -31,38 +33,38 @@
        LIGHT THEME OVERRIDES
        ========================================== */
     body.light-theme {
-      --bg: #f0f4ff;
-      --panel: rgba(255, 255, 255, 0.92);
-      --panel-border: rgba(61, 122, 255, 0.18);
-      --text-main: #0f172a;
-      --text-muted: #4b5880;
-      --accent-1: #2563eb;
-      --accent-2: #4f46e5;
+      --bg: #faf5ff;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-border: rgba(124, 58, 237, 0.14);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --accent-1: #7c3aed;
+      --accent-2: #0d9488;
     }
     body.light-theme {
       background: var(--bg);
     }
     body.light-theme::before {
       background:
-        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(99, 179, 237, 0.12) 0%, transparent 68%),
-        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(100, 149, 255, 0.10) 0%, transparent 68%),
-        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(200, 220, 255, 0.15) 0%, transparent 70%),
-        linear-gradient(180deg, #eef2ff 0%, #f0f4ff 100%);
+        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(20, 184, 166, 0.08) 0%, transparent 68%),
+        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(168, 85, 247, 0.08) 0%, transparent 68%),
+        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(124, 58, 237, 0.10) 0%, transparent 70%),
+        linear-gradient(180deg, #faf5ff 0%, #fdfcff 100%);
     }
     body.light-theme .navbar {
-      background: rgba(240, 244, 255, 0.88);
-      border-bottom: 1px solid rgba(61, 122, 255, 0.12);
+      background: rgba(250, 245, 255, 0.88);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.10);
     }
     body.light-theme .site-footer {
-      background: rgba(230, 236, 255, 0.5);
-      border-top: 1px solid rgba(61, 122, 255, 0.12);
+      background: rgba(243, 232, 255, 0.5);
+      border-top: 1px solid rgba(124, 58, 237, 0.10);
     }
     body.light-theme .feat-item {
       background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(61, 122, 255, 0.12);
+      border-color: rgba(124, 58, 237, 0.12);
     }
     body.light-theme .feat-item:hover {
-      border-color: rgba(61, 122, 255, 0.3);
+      border-color: rgba(124, 58, 237, 0.3);
     }
 
     /* ==========================================
@@ -73,7 +75,7 @@
       height: 36px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(168, 85, 247, 0.15);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -83,13 +85,13 @@
       flex-shrink: 0;
     }
     .theme-toggle:hover {
-      background: rgba(61, 122, 255, 0.18);
-      border-color: rgba(61, 122, 255, 0.35);
+      background: rgba(168, 85, 247, 0.24);
+      border-color: rgba(168, 85, 247, 0.45);
       transform: scale(1.1);
     }
     body.light-theme .theme-toggle {
-      border-color: rgba(61, 122, 255, 0.2);
-      background: rgba(61, 122, 255, 0.08);
+      border-color: rgba(124, 58, 237, 0.2);
+      background: rgba(124, 58, 237, 0.08);
     }
 
     /* ==========================================
@@ -101,26 +103,26 @@
       text-align: center;
       letter-spacing: -0.03em;
       margin-bottom: 12px;
-      background: linear-gradient(135deg, #fff 30%, #a0b8ff 70%);
+      background: linear-gradient(135deg, #fff 30%, #d8b4fe 70%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     body.light-theme .page-title {
-      background: linear-gradient(135deg, #0f172a 30%, #2563eb 80%);
+      background: linear-gradient(135deg, #0f172a 30%, #7c3aed 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     .hero-title-main {
-      background: linear-gradient(135deg, #fff 30%, #a0b8ff 70%, #c084fc 100%);
+      background: linear-gradient(135deg, #fff 30%, #d8b4fe 70%, #a7f3d0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     body.light-theme .hero-title-main {
-      background: linear-gradient(135deg, #0f172a 30%, #2563eb 80%, #4f46e5 100%);
+      background: linear-gradient(135deg, #0f172a 30%, #7c3aed 80%, #0d9488 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -128,23 +130,23 @@
 
     body.light-theme .chat-panel {
       background: var(--panel);
-      box-shadow: 0 24px 64px rgba(61, 122, 255, 0.08);
+      box-shadow: 0 24px 64px rgba(168, 85, 247, 0.08);
     }
     body.light-theme .bub-bot {
-      background: rgba(61, 122, 255, 0.08);
-      border-color: rgba(61, 122, 255, 0.15);
+      background: rgba(124, 58, 237, 0.08);
+      border-color: rgba(124, 58, 237, 0.15);
     }
     body.light-theme .ch-form input {
-      background: rgba(61, 122, 255, 0.04);
+      background: rgba(80, 90, 110, 0.04);
     }
     body.light-theme .login-modal-content {
       background: #ffffff;
-      border-color: rgba(61, 122, 255, 0.22);
-      box-shadow: 0 30px 80px rgba(0, 0, 100, 0.15);
+      border-color: rgba(80, 90, 110, 0.22);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
     }
     body.light-theme .login-modal-content input {
       background: #f8fafc;
-      border-color: rgba(61, 122, 255, 0.15);
+      border-color: rgba(80, 90, 110, 0.15);
       color: #0f172a;
     }
 
@@ -184,10 +186,10 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(0, 185, 145, 0.17) 0%, transparent 68%),
-        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(50, 90, 255, 0.13) 0%, transparent 68%),
-        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 45, 110, 0.28) 0%, transparent 70%),
-        linear-gradient(180deg, #070d1e 0%, #040810 100%);
+        radial-gradient(ellipse 65% 55% at -8% 52%, rgba(20, 184, 166, 0.14) 0%, transparent 68%),
+        radial-gradient(ellipse 55% 50% at 108% 35%, rgba(168, 85, 247, 0.12) 0%, transparent 68%),
+        radial-gradient(ellipse 90% 50% at 50% -5%, rgba(124, 58, 237, 0.18) 0%, transparent 70%),
+        linear-gradient(180deg, #090510 0%, #030206 100%);
     }
 
     .navbar, main, .site-footer {
@@ -199,24 +201,24 @@
        NAVBAR
        ========================================== */
     @keyframes orb-pulse {
-      0% { box-shadow: 0 0 12px rgba(74, 123, 255, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.4); }
-      50% { box-shadow: 0 0 24px rgba(74, 123, 255, 0.85), inset 0 0 8px rgba(255, 255, 255, 0.6); transform: scale(1.05); }
-      100% { box-shadow: 0 0 12px rgba(74, 123, 255, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.4); }
+      0% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.4); }
+      50% { box-shadow: 0 0 24px rgba(168, 85, 247, 0.85), inset 0 0 8px rgba(255, 255, 255, 0.6); transform: scale(1.05); }
+      100% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.4); }
     }
 
     .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 52px;
+      padding: 0 32px;
       height: var(--navbar-h);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+      border-bottom: 1px solid rgba(168, 85, 247, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(6, 11, 22, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(8, 4, 14, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       transition: background 0.3s, border-color 0.3s;
     }
 
@@ -237,7 +239,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #4a7bff, #7a5cf6);
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -271,7 +273,7 @@
 
     .nav-links a:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(168, 85, 247, 0.15);
     }
     body.light-theme .nav-links a:hover {
       background: rgba(0, 0, 0, 0.04);
@@ -280,10 +282,10 @@
     .nav-links a.active {
       color: #fff !important;
       background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
-      box-shadow: 0 4px 12px rgba(74, 123, 255, 0.25);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
     }
     body.light-theme .nav-links a.active {
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
     }
 
     .nav-actions {
@@ -448,7 +450,7 @@
       font-weight: 600;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 22px -4px rgba(61, 122, 255, 0.60);
+      box-shadow: 0 4px 22px -4px rgba(168, 85, 247, 0.35);
       transition: transform 0.18s, box-shadow 0.18s;
       letter-spacing: -0.01em;
       font-family: inherit;
@@ -456,7 +458,7 @@
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px -4px rgba(61, 122, 255, 0.80);
+      box-shadow: 0 8px 30px -4px rgba(168, 85, 247, 0.55);
     }
 
     .btn-primary:disabled {
@@ -536,7 +538,7 @@
 
     .sc-card {
       background: rgba(8, 16, 34, 0.75);
-      border: 1px solid rgba(70, 120, 255, 0.15);
+      border: 1px solid rgba(80, 90, 110, 0.15);
       border-radius: var(--radius-lg);
       padding: 20px;
       backdrop-filter: blur(12px);
@@ -594,7 +596,7 @@
     .im-canvas {
       height: 64px;
       border-radius: 7px;
-      background: linear-gradient(135deg, rgba(50, 100, 255, 0.28), rgba(100, 80, 240, 0.20));
+      background: linear-gradient(135deg, rgba(80, 90, 110, 0.28), rgba(80, 90, 110, 0.20));
     }
 
     .im-chips {
@@ -605,8 +607,8 @@
 
     .chip {
       font-size: 9px;
-      background: rgba(61, 122, 255, 0.16);
-      color: #88b4ff;
+      background: rgba(80, 90, 110, 0.16);
+      color: #b0c0d8;
       border-radius: 999px;
       padding: 3px 8px;
       font-weight: 600;
@@ -648,8 +650,8 @@
     }
 
     .doc-icon.docx {
-      background: rgba(50, 120, 255, 0.18);
-      color: #88b4ff;
+      background: rgba(80, 90, 110, 0.18);
+      color: #b0c0d8;
     }
 
     .doc-meta {
@@ -691,7 +693,7 @@
       width: 340px;
       height: 340px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(35, 90, 255, 0.24) 0%, rgba(20, 65, 200, 0.10) 45%, transparent 72%);
+      background: radial-gradient(circle, rgba(80, 90, 110, 0.24) 0%, rgba(80, 90, 110, 0.10) 45%, transparent 72%);
       pointer-events: none;
     }
 
@@ -703,7 +705,7 @@
       width: 310px;
       height: 310px;
       border-radius: 50%;
-      border: 1.5px solid rgba(61, 122, 255, 0.20);
+      border: 1.5px solid rgba(80, 90, 110, 0.20);
       animation: spinRing 20s linear infinite;
       pointer-events: none;
     }
@@ -717,7 +719,7 @@
       height: 10px;
       border-radius: 50%;
       background: var(--accent-1);
-      box-shadow: 0 0 12px 4px rgba(61, 122, 255, 0.65);
+      box-shadow: 0 0 12px 4px rgba(80, 90, 110, 0.65);
       transform: translateX(-50%);
     }
 
@@ -730,7 +732,7 @@
       position: relative;
       z-index: 2;
       animation: botFloat 3.8s ease-in-out infinite;
-      filter: drop-shadow(0 18px 36px rgba(40, 90, 255, 0.50));
+      filter: drop-shadow(0 18px 36px rgba(80, 90, 110, 0.50));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -752,21 +754,21 @@
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #b0d8ff, #5599ff);
-      box-shadow: 0 0 10px 4px rgba(80, 160, 255, 0.55);
+      background: radial-gradient(circle at 35% 35%, #d8e8ff, #8090b0);
+      box-shadow: 0 0 10px 4px rgba(80, 90, 110, 0.55);
     }
 
     .bot-antenna-stick {
       width: 4px;
       height: 22px;
-      background: linear-gradient(180deg, #80b0ff, #3366dd);
+      background: linear-gradient(180deg, #b0c0d8, #8090b0);
       border-radius: 2px;
     }
 
     .bot-head {
       width: 130px;
       height: 96px;
-      background: linear-gradient(180deg, #6aaeff 0%, #2356d8 100%);
+      background: linear-gradient(180deg, #a0b0d8 0%, #6070a0 100%);
       border-radius: 36px;
       position: relative;
       overflow: visible;
@@ -779,7 +781,7 @@
       width: 10px;
       height: 28px;
       border-radius: 5px;
-      background: linear-gradient(180deg, #4a80e8, #1d50c8);
+      background: linear-gradient(180deg, #8090b0, #6070a0);
     }
 
     .bot-ear.l { left: -10px; }
@@ -803,8 +805,8 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #c8e8ff, #44aaff 55%, #1a6cc8);
-      box-shadow: 0 0 10px 3px rgba(80, 180, 255, 0.55);
+      background: radial-gradient(circle at 35% 30%, #e8f8ff, #8090b0 55%, #6070a0);
+      box-shadow: 0 0 10px 3px rgba(80, 90, 110, 0.55);
       position: relative;
     }
 
@@ -822,7 +824,7 @@
     .bot-neck {
       width: 32px;
       height: 14px;
-      background: #1f50cc;
+      background: #6070a0;
       border-radius: 0 0 6px 6px;
       margin: 0 auto;
     }
@@ -830,7 +832,7 @@
     .bot-body {
       width: 160px;
       height: 106px;
-      background: linear-gradient(180deg, #5b9fff 0%, #2e6aee 55%, #1a46b8 100%);
+      background: linear-gradient(180deg, #a0b0d8 0%, #6070a0 55%, #405080 100%);
       border-radius: 28px;
       position: relative;
       box-shadow: inset 0 6px 14px rgba(255, 255, 255, 0.20), inset 0 -4px 10px rgba(0, 0, 60, 0.30);
@@ -873,7 +875,7 @@
       width: 26px;
       height: 64px;
       border-radius: 13px;
-      background: linear-gradient(180deg, #5b9fff, #2e6aee);
+      background: linear-gradient(180deg, #a0b0d8, #6070a0);
       box-shadow: inset 2px 0 6px rgba(255, 255, 255, 0.18);
     }
 
@@ -884,7 +886,7 @@
       width: 90px;
       height: 10px;
       border-radius: 50%;
-      background: rgba(20, 60, 180, 0.22);
+      background: rgba(80, 90, 110, 0.22);
       margin: 4px auto 0;
       filter: blur(2px);
     }
@@ -897,7 +899,7 @@
       transform: translateY(-42%);
       width: 172px;
       background: rgba(5, 12, 26, 0.94);
-      border: 1px solid rgba(60, 110, 255, 0.22);
+      border: 1px solid rgba(80, 90, 110, 0.22);
       border-radius: 14px;
       padding: 12px;
       z-index: 4;
@@ -945,8 +947,8 @@
     }
 
     .co-bub-u {
-      background: rgba(61, 122, 255, 0.22);
-      color: #aac5ff;
+      background: rgba(168, 85, 247, 0.22);
+      color: #b0c0d8;
       border-radius: 10px 4px 10px 10px;
     }
 
@@ -960,7 +962,7 @@
       border-radius: 999px;
       padding: 5px 10px;
       margin-top: 6px;
-      box-shadow: 0 4px 12px -2px rgba(61, 122, 255, 0.5);
+      box-shadow: 0 4px 12px -2px rgba(168, 85, 247, 0.35);
     }
 
     .stage-cta {
@@ -982,15 +984,15 @@
     }
 
     .feat-item {
-      background: rgba(8, 16, 34, 0.65);
-      border: 1px solid rgba(60, 110, 255, 0.12);
+      background: rgba(13, 9, 22, 0.65);
+      border: 1px solid rgba(168, 85, 247, 0.12);
       border-radius: var(--radius);
       padding: 22px 20px;
       transition: border-color 0.2s, transform 0.2s;
     }
 
     .feat-item:hover {
-      border-color: rgba(60, 110, 255, 0.32);
+      border-color: rgba(168, 85, 247, 0.32);
       transform: translateY(-2px);
     }
 
@@ -998,7 +1000,7 @@
       width: 36px;
       height: 36px;
       border-radius: 10px;
-      background: rgba(61, 122, 255, 0.13);
+      background: rgba(168, 85, 247, 0.13);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1031,166 +1033,362 @@
     }
 
     /* ==========================================
-       CHAT PAGE PANEL
+       CHAT PAGE PANEL — PREMIUM REDESIGN
        ========================================== */
     .chat-page {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 44px 24px 60px;
+      padding: 28px 24px 40px;
       min-height: calc(100vh - var(--navbar-h));
+      gap: 20px;
     }
 
-    .chat-panel {
+    /* ── Sidebar ───────────────────────────────────────────── */
+    .chat-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 4px;
+    }
+    .cs-model-card {
+      background: linear-gradient(135deg, rgba(168,85,247,0.12), rgba(20,184,166,0.08));
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 16px;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cs-model-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .cs-model-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cs-model-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+      animation: pulseDot 2.2s ease infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.18); }
+      50% { box-shadow: 0 0 0 7px rgba(34,197,94,0.05); }
+    }
+    .cs-model-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .cs-prompts-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 2px;
+    }
+    .cs-prompt-btn {
       width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.18s;
+      line-height: 1.4;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .cs-prompt-btn:hover {
+      background: rgba(168,85,247,0.1);
+      border-color: rgba(168,85,247,0.25);
+      color: var(--text-main);
+    }
+    .cs-prompt-icon {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      margin-top: 1px;
+      color: var(--accent-1);
+    }
+    body.light-theme .cs-prompt-btn { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.07); }
+    body.light-theme .cs-prompt-btn:hover { background: rgba(124,58,237,0.07); border-color: rgba(124,58,237,0.2); }
+
+    /* ── Main Chat Panel ───────────────────────────────────── */
+    .chat-panel {
+      flex: 1;
       max-width: 740px;
-      height: 72vh;
-      min-height: 480px;
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius-lg);
+      height: 78vh;
+      min-height: 540px;
+      background: rgba(8, 4, 16, 0.75);
+      border: 1px solid rgba(168,85,247,0.15);
+      border-radius: 24px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(168,85,247,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
+    /* ── Chat Header ───────────────────────────────────────── */
     .ch-head {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 15px 20px;
-      border-bottom: 1px solid var(--panel-border);
-      font-weight: 600;
-      font-size: 14px;
+      gap: 12px;
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(168,85,247,0.1);
+      background: linear-gradient(90deg, rgba(168,85,247,0.09) 0%, rgba(20,184,166,0.05) 100%);
+      flex-shrink: 0;
     }
-
-    .ch-dot {
-      width: 9px;
-      height: 9px;
+    .ch-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #14b8a6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(168,85,247,0.4);
+      animation: avatarGlow 3s ease infinite alternate;
+    }
+    @keyframes avatarGlow {
+      from { box-shadow: 0 4px 16px rgba(168,85,247,0.3); }
+      to   { box-shadow: 0 4px 28px rgba(20,184,166,0.45); }
+    }
+    .ch-head-info { display: flex; flex-direction: column; gap: 2px; }
+    .ch-head-name { font-size: 14.5px; font-weight: 800; color: var(--text-main); letter-spacing: -0.01em; }
+    .ch-head-status { font-size: 11px; color: #22c55e; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+    .ch-head-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #22c55e;
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
-      animation: dp 2.2s ease infinite;
+      display: inline-block;
+      animation: pulseDot 2.2s ease infinite;
     }
-
-    @keyframes dp {
-      0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
-      50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.06); }
-    }
-
-    .ch-status {
+    .ch-head-actions {
       margin-left: auto;
-      font-size: 12px;
-      font-weight: 400;
-      color: #22c55e;
+      display: flex;
+      gap: 8px;
+    }
+    .ch-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .ch-icon-btn:hover {
+      background: rgba(168,85,247,0.12);
+      border-color: rgba(168,85,247,0.3);
+      color: var(--accent-1);
     }
 
+    /* ── Messages Area ─────────────────────────────────────── */
     .ch-msgs {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 24px 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 20px;
+      background: transparent;
+      scroll-behavior: smooth;
     }
-
-    .ch-msgs::-webkit-scrollbar {
-      width: 4px;
-    }
-
+    .ch-msgs::-webkit-scrollbar { width: 4px; }
     .ch-msgs::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.09);
-      border-radius: 2px;
+      background: rgba(168,85,247,0.2);
+      border-radius: 4px;
     }
 
+    /* ── Message Rows ──────────────────────────────────────── */
     .msg-row {
       display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      animation: msgIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .msg-row-u { flex-direction: row-reverse; }
+
+    /* ── Bot Avatar in Message ─────────────────────────────── */
+    .msg-bot-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #14b8a6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 22px;
+    }
+    .msg-user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #06b6d4, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 22px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
     }
 
-    .msg-row-u {
-      justify-content: flex-end;
-    }
+    /* ── Bubbles ───────────────────────────────────────────── */
+    .msg-content { display: flex; flex-direction: column; gap: 4px; max-width: 75%; }
+    .msg-row-u .msg-content { align-items: flex-end; }
 
     .bubble {
-      max-width: 72%;
-      padding: 11px 16px;
-      border-radius: 16px;
+      padding: 13px 18px;
+      border-radius: 20px;
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.6;
+      word-break: break-word;
     }
-
     .bub-bot {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-bottom-left-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom-left-radius: 6px;
+      color: var(--text-main);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-
+    body.light-theme .bub-bot {
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.08);
+    }
     .bub-usr {
-      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 60%, #14b8a6 140%);
       color: #fff;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 6px 20px -6px rgba(61, 122, 255, 0.5);
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 8px 28px -6px rgba(168,85,247,0.55);
     }
 
+    /* ── Typing Indicator ─────────────────────────────────── */
     .typing {
       display: flex;
       gap: 5px;
       align-items: center;
-      padding: 14px 16px;
+      padding: 14px 18px;
     }
-
     .typing span {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--text-muted);
+      background: rgba(168,85,247,0.6);
       animation: blink 1.3s infinite ease-in-out;
     }
-
-    .typing span:nth-child(2) { animation-delay: 0.22s; }
-    .typing span:nth-child(3) { animation-delay: 0.44s; }
-
+    .typing span:nth-child(2) { animation-delay: 0.22s; background: rgba(20,184,166,0.6); }
+    .typing span:nth-child(3) { animation-delay: 0.44s; background: rgba(168,85,247,0.4); }
     @keyframes blink {
-      0%, 80%, 100% { opacity: 0.2; transform: scale(0.85); }
-      40% { opacity: 1; transform: scale(1.1); }
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1.15); }
     }
 
+    /* ── Input Area ─────────────────────────────────────────── */
+    .ch-form-wrap {
+      border-top: 1px solid rgba(168,85,247,0.1);
+      background: rgba(0,0,0,0.3);
+      padding: 14px 18px 16px;
+      flex-shrink: 0;
+    }
     .ch-form {
       display: flex;
       gap: 10px;
-      padding: 14px 16px;
-      border-top: 1px solid var(--panel-border);
+      align-items: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 16px;
+      padding: 8px 8px 8px 18px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
+    .ch-form:focus-within {
+      border-color: rgba(168,85,247,0.5);
+      box-shadow: 0 0 0 4px rgba(168,85,247,0.08);
+    }
     .ch-form input {
       flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(60, 110, 255, 0.18);
-      border-radius: 999px;
-      padding: 11px 18px;
+      background: transparent;
+      border: none;
+      padding: 8px 0;
       color: var(--text-main);
       font-size: 14px;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.18s;
+    }
+    .ch-form input::placeholder { color: var(--text-muted); }
+    .ch-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #a855f7, #14b8a6);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+      box-shadow: 0 4px 16px rgba(168,85,247,0.4);
+    }
+    .ch-send-btn:hover:not(:disabled) {
+      transform: scale(1.08);
+      box-shadow: 0 6px 24px rgba(168,85,247,0.55);
+    }
+    .ch-send-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .ch-form-hint {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 8px;
+      opacity: 0.6;
     }
 
-    .ch-form input:focus {
-      border-color: rgba(99, 140, 255, 0.55) !important;
-      box-shadow: 0 0 0 3px rgba(61, 122, 255, 0.1) !important;
-      outline: none;
-    }
-    body.light-theme .ch-form input:focus {
-      border-color: rgba(37, 99, 235, 0.5) !important;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.07) !important;
-    }
-    /* Message action buttons */
+    /* ── Message action buttons ─────────────────────────────── */
     .msg-actions {
       display: flex;
-      gap: 8px;
-      padding: 2px 4px;
+      gap: 4px;
+      padding: 2px 2px;
       flex-wrap: wrap;
     }
     .msg-actions-user { justify-content: flex-end; }
@@ -1202,25 +1400,27 @@
       color: var(--text-muted);
       padding: 3px 8px;
       border-radius: 99px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
       transition: all 0.18s;
       cursor: pointer;
     }
-    .msg-act-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.08); }
+    .msg-act-btn:hover { color: var(--text-main); background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.2); }
     body.light-theme .msg-act-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.07); }
-    body.light-theme .msg-act-btn:hover { background: rgba(0,0,0,0.08); }
-    .act-active-blue { color: #3d7aff !important; border-color: rgba(61,122,255,0.3) !important; }
+    body.light-theme .msg-act-btn:hover { background: rgba(124,58,237,0.07); border-color: rgba(124,58,237,0.15); }
+    .act-active-purple { color: var(--accent-1) !important; border-color: rgba(168,85,247,0.3) !important; }
     .act-active-green { color: #22c55e !important; border-color: rgba(34,197,94,0.3) !important; }
     .act-active-red { color: #ef4444 !important; border-color: rgba(239,68,68,0.3) !important; }
-    /* Feedback box */
+
+    /* ── Feedback box ─────────────────────────────────────── */
     .feedback-box {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(168,85,247,0.2);
       border-radius: 12px;
       padding: 12px;
       max-width: 320px;
     }
+    body.light-theme .feedback-box { background: rgba(0,0,0,0.04); }
     .feedback-ta {
       width: 100%;
       min-height: 52px;
@@ -1238,8 +1438,28 @@
     body.light-theme .feedback-ta { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
     .fb-cancel { background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
     .fb-cancel:hover { color: var(--text-main); }
-    .fb-submit { background: linear-gradient(135deg,#3d7aff,#6b5ef8); border: none; border-radius: 6px; padding: 5px 14px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .fb-submit { background: linear-gradient(135deg,var(--accent-1),var(--accent-2)); border: none; border-radius: 6px; padding: 5px 14px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
     .align-end { align-items: flex-end; }
+
+    /* ── Chat Responsive ──────────────────────────────────── */
+    @media (max-width: 860px) { .chat-sidebar { display: none; } }
+
+    /* ── Lucide Icons Global Styles ───────────────────────────── */
+    [data-lucide], i[lucide-icon] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    [data-lucide] svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     .ch-form input::placeholder {
       color: var(--text-muted);
@@ -1312,14 +1532,13 @@
     <div class="nav-actions" ng-class="{open: menuOpen}">
       <!-- Dark / Light Theme Toggle -->
       <button class="theme-toggle" ng-click="toggleTheme()" title="Toggle theme">
-        <span ng-if="!lightTheme">🌙</span>
-        <span ng-if="lightTheme">☀️</span>
+        <svg ng-if="!lightTheme" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg ng-if="lightTheme" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
       <span ng-if="user" style="font-size:13.5px; font-weight:600; color:var(--text-main); margin-right:4px;">Hi, {{user.name}}</span>
       <a href="" ng-if="user" ng-click="logout()" class="btn-ghost">Logout</a>
-      <a href="" ng-if="!user" ng-click="openLoginModal(false)" class="btn-ghost">Sign in</a>
       <a href="" ng-if="!user" ng-click="openLoginModal(true)" class="btn-primary btn-sm">Sign Up &#x2197;</a>
-      <a href="#!/chat" class="btn-primary btn-sm" style="background:var(--accent-1); box-shadow:none;">Chat Console &#x2197;</a>
+      <a href="#!/chat" class="btn-primary btn-sm" style="background:linear-gradient(135deg,#7c3aed,#14b8a6);box-shadow:0 4px 18px rgba(124,58,237,0.35);">Chat Console &#x2197;</a>
     </div>
   </header>
 
@@ -1384,10 +1603,10 @@
     <!-- HERO SECTION -->
     <section style="position:relative;display:flex;align-items:center;min-height:calc(100vh - var(--navbar-h) - 40px);padding:60px 48px;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.04);background:var(--bg);max-width:1300px;margin:0 auto;">
       <!-- Glowing background orbs -->
-      <div style="position:absolute;top:60px;left:10%;width:180px;height:180px;background:rgba(61,122,255,0.06);border-radius:50%;filter:blur(50px);animation:floatA 8s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
-      <div style="position:absolute;bottom:60px;right:10%;width:220px;height:220px;background:rgba(107,94,248,0.05);border-radius:50%;filter:blur(60px);animation:floatB 10s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
+      <div style="position:absolute;top:60px;left:10%;width:180px;height:180px;background:rgba(168,85,247,0.06);border-radius:50%;filter:blur(50px);animation:floatA 8s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
+      <div style="position:absolute;bottom:60px;right:10%;width:220px;height:220px;background:rgba(20,184,166,0.05);border-radius:50%;filter:blur(60px);animation:floatB 10s ease-in-out infinite;pointer-events:none;z-index:2;"></div>
 
-      <!-- Decoupled Blended Background Image (Fades all 4 edges to #060b16) -->
+      <!-- Decoupled Blended Background Image (Fades all 4 edges to #08050e) -->
       <div style="position:absolute;top:0;right:0;bottom:0;width:55%;z-index:1;pointer-events:none;overflow:hidden;">
         <div style="position:relative;width:100%;height:100%;background-image:url('images/cute_robot.png');background-size:cover;background-position:center right;background-repeat:no-repeat;">
           <!-- Fade left edge -->
@@ -1402,21 +1621,21 @@
       </div>
 
       <!-- Content Container (Left Side Unique Simple Accent Style) -->
-      <div style="position:relative;z-index:3;max-width:620px;text-align:left;display:flex;flex-direction:column;gap:18px;border-left:2px solid rgba(61,122,255,0.22);padding-left:24px;">
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(61,122,255,0.08);border:1px solid rgba(61,122,255,0.18);border-radius:99px;padding:5px 14px;font-size:11px;font-weight:600;color:#7ba8ff;letter-spacing:0.04em;align-self:flex-start;">
-          <span style="width:5px;height:5px;border-radius:50%;background:#3d7aff;box-shadow:0 0 6px #3d7aff;display:inline-block;"></span>
+      <div style="position:relative;z-index:3;max-width:620px;text-align:left;display:flex;flex-direction:column;gap:18px;border-left:2px solid rgba(168,85,247,0.22);padding-left:24px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.18);border-radius:99px;padding:5px 14px;font-size:11px;font-weight:600;color:#c084fc;letter-spacing:0.04em;align-self:flex-start;">
+          <span style="width:5px;height:5px;border-radius:50%;background:#a855f7;box-shadow:0 0 6px #a855f7;display:inline-block;"></span>
           Powered by Groq — The world's fastest AI inference engine
         </div>
 
         <h1 style="font-size:clamp(32px,4.8vw,52px);font-weight:800;line-height:1.15;letter-spacing:-0.03em;">
           <span class="hero-title-main">Talk Smarter.</span><br/>
-          <span style="background:linear-gradient(135deg,#a0b8ff 0%,#3d7aff 50%,#6b5ef8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Think Faster.</span>
+          <span style="background:linear-gradient(135deg,#e9d5ff 0%,#a855f7 50%,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Think Faster.</span>
         </h1>
         <p style="font-size:clamp(13.5px,1.7vw,15.5px);color:var(--text-muted);line-height:1.65;max-width:500px;margin-bottom:6px;">
           Experience effortless conversations, ultra-fast image generation, and intelligent document Q&amp;A all in one premium workspace.
         </p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a href="#!/chat" class="btn-primary" style="padding:12px 26px;font-size:13.5px;box-shadow:0 8px 30px rgba(61,122,255,0.4);">
+          <a href="#!/chat" class="btn-primary" style="padding:12px 26px;font-size:13.5px;box-shadow:0 8px 30px rgba(168,85,247,0.4);">
             Try for Free &rarr;
           </a>
           <a href="#!/features" class="btn-ghost" style="padding:12px 24px;font-size:13.5px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);">
@@ -1445,16 +1664,16 @@
 
 
     <!-- TABS INTERACTIVE PRODUCT DEMO -->
-    <section style="max-width:1000px;margin:80px auto;padding:0 24px;">
+    <section style="max-width:1160px;margin:80px auto;padding:0 32px;">
       <p style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Experience the Power</p>
       <h2 style="text-align:center;font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-0.02em;margin-bottom:44px;">Unified Workspace. Instant Results.</h2>
 
       <!-- Tab Buttons -->
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:36px;flex-wrap:wrap;">
         <button ng-repeat="tab in tabs" ng-click="$parent.activeTab = tab.id"
-          ng-style="$parent.activeTab === tab.id ? {'background':'linear-gradient(135deg,#3d7aff,#6b5ef8)','color':'#fff','border-color':'transparent'} : {'background':'rgba(255,255,255,0.04)','color':'var(--text-muted)','border-color':'rgba(255,255,255,0.08)'}"
-          style="border:1px solid;border-radius:999px;padding:10px 24px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;outline:none;">
-          {{tab.emoji}} {{tab.label}}
+          ng-style="$parent.activeTab === tab.id ? {'background':'linear-gradient(135deg,var(--accent-1),var(--accent-2))','color':'#fff','border-color':'transparent'} : {'background':'rgba(255,255,255,0.04)','color':'var(--text-muted)','border-color':'rgba(255,255,255,0.08)'}"
+          style="border:1px solid;border-radius:999px;padding:10px 24px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;outline:none;display:inline-flex;align-items:center;gap:6px;">
+          <i lucide-icon="{{tab.icon}}" style="width:15px;height:15px;"></i> {{tab.label}}
         </button>
       </div>
 
@@ -1473,14 +1692,14 @@
           <a href="#!/chat" class="btn-primary btn-sm">Open Chat Console &rarr;</a>
         </div>
         <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px;">
-          <div style="background:rgba(61,122,255,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
-            Hello! I'm AIChatterbox. What are we brainstorming today? 🚀
+          <div style="background:rgba(168,85,247,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
+            Hello! I'm AIChatterbox. What are we brainstorming today?
           </div>
-          <div style="background:rgba(61,122,255,0.15);border-radius:12px 4px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;align-self:flex-end;color:var(--text-main);">
+          <div style="background:rgba(20,184,166,0.15);border-radius:12px 4px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;align-self:flex-end;color:var(--text-main);">
             Write a 1-sentence sales pitch for a coding assistant.
           </div>
-          <div style="background:rgba(61,122,255,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
-            Supercharge your development cycle with Antigravity, the AI coding companion that writes, tests, and refactors clean code in real-time. ⚡
+          <div style="background:rgba(168,85,247,0.1);border-radius:4px 12px 12px 12px;padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%;">
+            Supercharge your development cycle with Antigravity, the AI coding companion that writes, tests, and refactors clean code in real-time.
           </div>
         </div>
       </div>
@@ -1494,13 +1713,13 @@
           </p>
           <div style="display:flex;gap:8px;margin-bottom:14px;">
             <input type="text" ng-model="imagePrompt" placeholder="A futuristic neon city at dusk..." style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:12px;outline:none;" />
-            <button ng-click="generateImage(imagePrompt)" ng-disabled="isGeneratingImage || !imagePrompt" style="background:linear-gradient(135deg,#3d7aff,#6b5ef8);border:none;border-radius:8px;padding:8px 16px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;outline:none;">{{isGeneratingImage ? '...' : 'Generate'}}</button>
+            <button ng-click="generateImage(imagePrompt)" ng-disabled="isGeneratingImage || !imagePrompt" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));border:none;border-radius:8px;padding:8px 16px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;outline:none;">{{isGeneratingImage ? '...' : 'Generate'}}</button>
           </div>
-          <div ng-if="generatedImageUrl" style="border-radius:12px;overflow:hidden;height:120px;background-image:url({{generatedImageUrl}});background-size:cover;background-position:center;border:1px solid rgba(61,122,255,0.2);"></div>
+          <div ng-if="generatedImageUrl" style="border-radius:12px;overflow:hidden;height:120px;background-image:url({{generatedImageUrl}});background-size:cover;background-position:center;border:1px solid rgba(168,85,247,0.2);"></div>
         </div>
         <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;text-align:center;">
-          <div style="background:linear-gradient(135deg,rgba(61,122,255,0.12),rgba(107,94,248,0.1));border-radius:14px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:1px solid var(--panel-border);position:relative;overflow:hidden;">
-            <div style="font-size:36px;margin-bottom:6px;">🏙️</div>
+          <div style="background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(20,184,166,0.1));border-radius:14px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:1px solid var(--panel-border);position:relative;overflow:hidden;">
+            <i lucide-icon="image" style="width:36px;height:36px;color:var(--accent-1);"></i>
             <div style="position:absolute;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,0.65);padding:6px;border-radius:6px;font-size:11px;color:#fff;">
               "A futuristic neon city at dusk"
             </div>
@@ -1518,14 +1737,14 @@
           </p>
           <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
             <input type="file" id="doc-upload-home" style="display:none;" onchange="angular.element(this).scope().uploadFile(this.files)" />
-            <button onclick="document.getElementById('doc-upload-home').click()" style="background:linear-gradient(135deg,#3d7aff,#6b5ef8);border:none;border-radius:8px;padding:10px 20px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;outline:none;">📄 Upload File</button>
+            <button onclick="document.getElementById('doc-upload-home').click()" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));border:none;border-radius:8px;padding:10px 20px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;outline:none;display:inline-flex;align-items:center;gap:6px;"><i lucide-icon="upload-cloud" style="width:14px;height:14px;"></i> Upload File</button>
             <span style="font-size:11px;color:var(--text-muted);">PDF &bull; DOCX &bull; TXT</span>
           </div>
           <div ng-if="isUploading" style="font-size:12px;color:var(--text-muted);font-family:monospace;">Uploading &amp; indexing document...</div>
         </div>
         <div style="background:var(--panel);border:1px solid var(--panel-border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:10px;">
-          <div ng-repeat="d in documents" style="display:flex;align-items:center;gap:10px;background:rgba(61,122,255,0.05);border-radius:10px;padding:8px 12px;border:1px solid var(--panel-border);">
-            <div style="width:30px;height:30px;border-radius:6px;background:rgba(61,122,255,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-1);">{{d.type | uppercase}}</div>
+          <div ng-repeat="d in documents" style="display:flex;align-items:center;gap:10px;background:rgba(168,85,247,0.05);border-radius:10px;padding:8px 12px;border:1px solid var(--panel-border);">
+            <div style="width:30px;height:30px;border-radius:6px;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-2);">{{d.type | uppercase}}</div>
             <div style="flex:1;min-width:0;">
               <div style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{d.name}}</div>
               <div style="font-size:10.5px;color:var(--text-muted);">{{d.size}} &bull; {{d.pages}} pages</div>
@@ -1537,13 +1756,13 @@
     </section>
 
     <!-- HOW IT WORKS TIMELINE -->
-    <section style="background:rgba(8,16,34,0.4);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:72px 24px;">
+    <section style="background:rgba(13,9,22,0.4);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:72px 24px;">
       <div style="max-width:860px;margin:0 auto;text-align:center;">
         <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Easy Setup</p>
         <h2 style="font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-0.02em;margin-bottom:50px;">Up and Running in 3 Steps</h2>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;">
           <div ng-repeat="step in howItWorks" style="text-align:center;padding:0 12px;">
-            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3d7aff,#6b5ef8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;box-shadow:0 8px 24px rgba(61,122,255,0.4);color:#fff;">{{step.emoji}}</div>
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 24px rgba(168,85,247,0.25);color:#fff;"><i lucide-icon="{{step.icon}}" style="width:20px;height:20px;"></i></div>
             <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;">{{step.title}}</h4>
             <p style="font-size:12.5px;color:var(--text-muted);line-height:1.55;">{{step.desc}}</p>
           </div>
@@ -1551,28 +1770,10 @@
       </div>
     </section>
 
-    <!-- TESTIMONIALS STRIP -->
-    <section style="max-width:1000px;margin:80px auto;padding:0 24px;">
-      <p style="text-align:center;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;">Trusted Reviews</p>
-      <h2 style="text-align:center;font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-0.02em;margin-bottom:44px;">Loved by Developers &amp; Creators</h2>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-        <div ng-repeat="t in testimonials" style="background:var(--panel);border:1px solid var(--panel-border);border-radius:18px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;">
-          <div style="color:#f59e0b;font-size:12px;">★★★★★</div>
-          <p style="font-size:13px;color:var(--text-muted);line-height:1.6;font-style:italic;">"{{t.quote}}"</p>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:auto;">
-            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3d7aff,#6b5ef8);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#fff;">{{t.initials}}</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;">{{t.name}}</div>
-              <div style="font-size:11px;color:var(--text-muted);">{{t.role}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- BOTTOM CTA BANNER -->
-    <section style="max-width:860px;margin:0 auto 80px;padding:0 24px;">
-      <div style="background:linear-gradient(135deg,rgba(61,122,255,0.15) 0%,rgba(107,94,248,0.12) 100%);border:1px solid rgba(61,122,255,0.22);border-radius:24px;padding:50px 36px;text-align:center;">
+    <section style="max-width:1000px;margin:0 auto 80px;padding:0 32px;">
+      <div style="background:linear-gradient(135deg,rgba(168,85,247,0.12) 0%,rgba(20,184,166,0.08) 100%);border:1px solid rgba(168,85,247,0.18);border-radius:24px;padding:50px 36px;text-align:center;">
         <h2 style="font-size:32px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;">Ready to Talk Smarter?</h2>
         <p style="font-size:14.5px;color:var(--text-muted);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;">Join 50,000+ users already supercharging their daily workflow with AIChatterbox.</p>
         <a href="#!/chat" class="btn-primary" style="padding:13px 30px;font-size:14.5px;">Get Started Free</a>
@@ -1585,35 +1786,81 @@
        ========================================== -->
   <script type="text/ng-template" id="chat.html">
     <section class="chat-page">
+
+      <!-- Sidebar -->
+      <aside class="chat-sidebar">
+        <div class="cs-model-card">
+          <div class="cs-model-label">Active Model</div>
+          <div class="cs-model-name"><span class="cs-model-dot"></span> Llama 3.1 8B</div>
+          <div class="cs-model-sub">Powered by Groq — ultra-fast LPU inference engine</div>
+        </div>
+        <div class="cs-prompts-title">Quick Prompts</div>
+        <button class="cs-prompt-btn" ng-click="usePrompt('Explain quantum computing in simple terms')"
+          ><svg class="cs-prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg
+          >Explain quantum computing simply</button>
+        <button class="cs-prompt-btn" ng-click="usePrompt('Write a Python function to sort a list')"
+          ><svg class="cs-prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg
+          >Write me a Python snippet</button>
+        <button class="cs-prompt-btn" ng-click="usePrompt('Give me 5 ideas for a mobile app startup')"
+          ><svg class="cs-prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg
+          >Startup idea brainstorm</button>
+        <button class="cs-prompt-btn" ng-click="usePrompt('Summarize the key benefits of AI in healthcare')"
+          ><svg class="cs-prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg
+          >AI in healthcare summary</button>
+      </aside>
+
+      <!-- Main Chat Panel -->
       <div class="chat-panel">
+
+        <!-- Header -->
         <header class="ch-head">
-          <span class="brand-orb" style="width:26px;height:26px;flex-shrink:0;animation:none;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-              <circle cx="9" cy="10" r="2.4" fill="white"/>
-              <circle cx="15" cy="10" r="2.4" fill="white"/>
+          <div class="ch-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="9" cy="10" r="2.3" fill="white"/>
+              <circle cx="15" cy="10" r="2.3" fill="white"/>
               <path d="M7 15.5c1.4 1.4 3.2 2 5 2s3.6-.6 5-2" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-          </span>
-          <span style="font-size:14.5px;font-weight:700;">AIChatterbox Console</span>
+          </div>
+          <div class="ch-head-info">
+            <div class="ch-head-name">AIChatterbox</div>
+            <div class="ch-head-status">Online &mdash; ready to chat</div>
+          </div>
+          <div class="ch-head-actions">
+            <button class="ch-icon-btn" title="Clear chat" ng-click="messages.length = 1" style="font-size:14px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg>
+            </button>
+          </div>
         </header>
+
+        <!-- Messages -->
         <div class="ch-msgs" id="chat-messages-list">
           <div class="msg-row" ng-repeat="m in messages" ng-class="{'msg-row-u': m.role === 'user'}">
-            <div style="display:flex;flex-direction:column;gap:4px;" ng-class="{'align-end': m.role === 'user'}">
+
+            <!-- Bot avatar -->
+            <div class="msg-bot-avatar" ng-if="m.role !== 'user'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="9" cy="10" r="2.3" fill="white"/>
+                <circle cx="15" cy="10" r="2.3" fill="white"/>
+                <path d="M7 15.5c1.4 1.4 3.2 2 5 2s3.6-.6 5-2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <div class="msg-content" ng-class="{'align-end': m.role === 'user'}">
               <div class="bubble" ng-class="m.role === 'user' ? 'bub-usr' : 'bub-bot'">{{m.text}}</div>
               <!-- Action bar -->
               <div class="msg-actions" ng-class="{'msg-actions-user': m.role === 'user'}">
-                <a href="" ng-click="copyText(m)" ng-class="{'act-active-blue': m.copied}" class="msg-act-btn" title="Copy">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <a href="" ng-click="copyText(m)" ng-class="{'act-active-purple': m.copied}" class="msg-act-btn" title="Copy">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   <span>{{m.copied ? 'Copied!' : 'Copy'}}</span>
                 </a>
-                <a href="" ng-click="likeMsg(m)" ng-class="{'act-active-green': m.liked}" class="msg-act-btn" title="Like">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                <a href="" ng-click="likeMsg(m)" ng-class="{'act-active-green': m.liked}" class="msg-act-btn" title="Helpful">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
                 </a>
-                <a href="" ng-click="dislikeMsg(m)" ng-class="{'act-active-red': m.disliked}" class="msg-act-btn" title="Dislike">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                <a href="" ng-click="dislikeMsg(m)" ng-class="{'act-active-red': m.disliked}" class="msg-act-btn" title="Not helpful">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
                 </a>
-                <a href="" ng-click="toggleFeedback(m)" ng-class="{'act-active-blue': m.feedbackSubmitted}" class="msg-act-btn" title="Feedback">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <a href="" ng-click="toggleFeedback(m)" ng-class="{'act-active-purple': m.feedbackSubmitted}" class="msg-act-btn" title="Feedback">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   <span>{{m.feedbackSubmitted ? 'Sent!' : 'Feedback'}}</span>
                 </a>
               </div>
@@ -1626,29 +1873,49 @@
                 </div>
               </div>
             </div>
+
+            <!-- User avatar -->
+            <div class="msg-user-avatar" ng-if="m.role === 'user'">You</div>
+
           </div>
+          <!-- Typing indicator -->
           <div class="msg-row" ng-if="isSending">
+            <div class="msg-bot-avatar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="9" cy="10" r="2.3" fill="white"/>
+                <circle cx="15" cy="10" r="2.3" fill="white"/>
+                <path d="M7 15.5c1.4 1.4 3.2 2 5 2s3.6-.6 5-2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
             <div class="bubble bub-bot typing"><span></span><span></span><span></span></div>
           </div>
         </div>
-        <form class="ch-form" ng-submit="sendMessage()">
-          <input type="text" ng-model="draft" placeholder="Type your message..." autofocus />
-          <button type="submit" class="btn-primary btn-sm" ng-disabled="!draft.trim()">Send &#x2197;</button>
-        </form>
+
+        <!-- Input Bar -->
+        <div class="ch-form-wrap">
+          <form class="ch-form" ng-submit="sendMessage()">
+            <input type="text" ng-model="draft" placeholder="Ask me anything..." autofocus id="chat-input" />
+            <button type="submit" class="ch-send-btn" ng-disabled="!draft || !draft.trim()" title="Send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+          <div class="ch-form-hint">Press Enter to send &mdash; Powered by Groq LPU</div>
+        </div>
+
       </div>
     </section>
   </script>
 
   <!-- FEATURES PAGE -->
   <script type="text/ng-template" id="features.html">
-    <section style="max-width:900px;margin:60px auto;padding:0 24px;">
+    <section style="max-width:1160px;margin:60px auto;padding:0 32px;">
       <h1 class="page-title">Packed With Powerful Features</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Everything you need to communicate smarter, all in one place.</p>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
-        <div class="feat-item" ng-repeat="f in allFeatures">
-          <div class="fi-ico" style="font-size:22px;">{{f.emoji}}</div>
-          <h4>{{f.title}}</h4>
-          <p>{{f.desc}}</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:22px;">
+        <div class="feat-item" ng-repeat="f in allFeatures" ng-style="{'border-top': '4px solid ' + f.color, 'box-shadow': '0 12px 32px -4px rgba(0,0,0,0.15)'}">
+          <div class="fi-ico" ng-style="{'background': f.gradient, 'color': '#fff'}"><i lucide-icon="{{f.icon}}" style="width:16px;height:16px;"></i></div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:8px;">{{f.title}}</h4>
+          <p style="font-size:12.5px;color:var(--text-muted);line-height:1.6;">{{f.desc}}</p>
         </div>
       </div>
       <div style="text-align:center;margin-top:50px;">
@@ -1659,18 +1926,18 @@
 
   <!-- PRICING PAGE -->
   <script type="text/ng-template" id="pricing.html">
-    <section style="max-width:960px;margin:60px auto;padding:0 24px;">
+    <section style="max-width:1100px;margin:60px auto;padding:0 32px;">
       <h1 class="page-title">Simple, Transparent Pricing</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">No hidden fees. Cancel anytime.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-        <div ng-repeat="plan in plans" ng-style="{'background':'var(--panel)','border':'1px solid ' + (plan.highlight ? 'var(--accent-1)' : 'var(--panel-border)'),'border-radius':'20px','padding':'28px 22px','display':'flex','flex-direction':'column','align-items':'center','text-align':'center','gap':'10px'}">
-          <p style="font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">{{plan.name}}</p>
-          <div style="font-size:42px;font-weight:800;letter-spacing:-0.04em;">{{plan.price}}<span style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
-          <p style="font-size:13px;color:var(--text-muted);">{{plan.desc}}</p>
-          <ul style="list-style:none;text-align:left;margin:8px 0;padding:0;font-size:13px;color:var(--text-main);display:flex;flex-direction:column;gap:6px;width:100%;">
-            <li ng-repeat="feat in plan.features" style="display:flex;gap:6px;align-items:flex-start;"><span style="color:#22c55e;flex-shrink:0;">&#x2713;</span> {{feat}}</li>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+        <div ng-repeat="plan in plans" ng-style="{'background':'var(--panel)','border-top':'4px solid ' + plan.color,'border-left':'1px solid var(--panel-border)','border-right':'1px solid var(--panel-border)','border-bottom':'1px solid var(--panel-border)','border-radius':'20px','padding':'32px 24px','display':'flex','flex-direction':'column','align-items':'center','text-align':'center','gap':'12px','box-shadow': plan.highlight ? '0 20px 48px -10px rgba(168,85,247,0.22)' : '0 10px 30px -10px rgba(0,0,0,0.15)'}">
+          <p ng-style="{'color': plan.color}" style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">{{plan.name}}</p>
+          <div style="font-size:46px;font-weight:800;letter-spacing:-0.04em;color:var(--text-main);">{{plan.price}}<span style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">{{plan.desc}}</p>
+          <ul style="list-style:none;text-align:left;margin:8px 0 24px;padding:0;font-size:13px;color:var(--text-main);display:flex;flex-direction:column;gap:8px;width:100%;">
+            <li ng-repeat="feat in plan.features" style="display:flex;gap:8px;align-items:flex-start;"><span ng-style="{'color': plan.color}" style="flex-shrink:0;font-weight:700;">&#x2713;</span> {{feat}}</li>
           </ul>
-          <a href="" ng-click="openLoginModal(true)" class="btn-primary btn-sm" style="margin-top:auto;width:100%;justify-content:center;">{{plan.cta}}</a>
+          <a href="" ng-click="openLoginModal(true)" class="btn-primary btn-sm" ng-style="{'background': plan.highlight ? 'linear-gradient(135deg, ' + plan.color + ', #14b8a6)' : 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))', 'border': plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.08)', 'color': plan.highlight ? '#fff' : 'var(--text-main)'}" style="margin-top:auto;width:100%;justify-content:center;box-shadow:none;">{{plan.cta}}</a>
         </div>
       </div>
     </section>
@@ -1678,14 +1945,14 @@
 
   <!-- INTEGRATIONS PAGE -->
   <script type="text/ng-template" id="integrations.html">
-    <section style="max-width:900px;margin:60px auto;padding:0 24px;">
+    <section style="max-width:1160px;margin:60px auto;padding:0 32px;">
       <h1 class="page-title">Connect Everything You Use</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">AIChatterbox plugs into your existing workflow seamlessly.</p>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
-        <div ng-repeat="item in integrations" class="feat-item" style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:default;text-align:center;">
-          <div style="font-size:30px;">{{item.emoji}}</div>
-          <h4 style="font-size:13.5px;font-weight:700;">{{item.name}}</h4>
-          <p style="font-size:11.5px;color:var(--text-muted);">{{item.desc}}</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+        <div ng-repeat="item in integrations" class="feat-item" ng-style="{'border-bottom': '3.5px solid ' + item.color, 'box-shadow': '0 8px 24px -4px rgba(0,0,0,0.1)'}" style="display:flex;flex-direction:column;align-items:center;gap:12px;cursor:default;text-align:center;padding:26px 20px;">
+          <div ng-style="{'color': item.color}" style="display:inline-flex;"><i lucide-icon="{{item.icon}}" style="width:34px;height:34px;"></i></div>
+          <h4 style="font-size:14px;font-weight:700;color:var(--text-main);">{{item.name}}</h4>
+          <p style="font-size:11.5px;color:var(--text-muted);line-height:1.5;">{{item.desc}}</p>
         </div>
       </div>
     </section>
@@ -1693,17 +1960,17 @@
 
   <!-- BLOG PAGE -->
   <script type="text/ng-template" id="blog.html">
-    <section style="max-width:860px;margin:60px auto;padding:0 24px;">
+    <section style="max-width:1000px;margin:60px auto;padding:0 32px;">
       <h1 class="page-title">AI Insights and Updates</h1>
       <p style="text-align:center;color:var(--text-muted);font-size:14.5px;margin-bottom:50px;">Stay up to date with the latest in AI communication technology.</p>
       <div style="display:flex;flex-direction:column;gap:20px;">
-        <div ng-repeat="post in blogPosts" class="feat-item" style="display:flex;gap:20px;align-items:flex-start;padding:24px 26px;border-radius:16px;">
-          <div style="font-size:28px;flex-shrink:0;width:52px;height:52px;background:rgba(61,122,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;">{{post.emoji}}</div>
-          <div>
-            <p style="font-size:11px;font-weight:600;color:var(--accent-1);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">{{post.category}} &bull; {{post.date}}</p>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em;">{{post.title}}</h3>
-            <p style="font-size:13.5px;color:var(--text-muted);line-height:1.6;white-space:pre-line;">{{post.showFullContent ? (post.excerpt + post.bodyDetail) : post.excerpt}}</p>
-            <a href="" ng-click="post.showFullContent = !post.showFullContent" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:var(--accent-1);">{{post.showFullContent ? 'Show Less ↑' : 'Read More →'}}</a>
+        <div ng-repeat="post in blogPosts" class="feat-item" ng-style="{'border-left': '4px solid ' + post.color, 'box-shadow': '0 10px 30px -10px rgba(0,0,0,0.15)'}" style="display:flex;gap:24px;align-items:flex-start;padding:26px 28px;border-radius:16px;">
+          <div ng-style="{'background': 'rgba(255,255,255,0.03)', 'color': post.color, 'border': '1px solid ' + post.color + '22'}" style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:14px;flex-shrink:0;"><i lucide-icon="{{post.icon}}" style="width:24px;height:24px;"></i></div>
+          <div style="flex:1;">
+            <p ng-style="{'color': post.color}" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">{{post.category}} &bull; {{post.date}}</p>
+            <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-0.015em;color:var(--text-main);">{{post.title}}</h3>
+            <p style="font-size:13.5px;color:var(--text-muted);line-height:1.65;white-space:pre-line;">{{post.showFullContent ? (post.excerpt + post.bodyDetail) : post.excerpt}}</p>
+            <a href="" ng-click="post.showFullContent = !post.showFullContent" ng-style="{'color': post.color}" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;transition:opacity 0.2s;">{{post.showFullContent ? 'Show Less ↑' : 'Read More →'}}</a>
           </div>
         </div>
       </div>
@@ -1716,6 +1983,25 @@
 
   <script>
     angular.module('aiChatterbox', ['ngRoute'])
+
+      .directive('lucideIcon', ['$timeout', function($timeout) {
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            attrs.$observe('lucideIcon', function(val) {
+              if (!val) return;
+              // Clear previous SVG to avoid duplicates
+              element[0].innerHTML = '';
+              element[0].setAttribute('data-lucide', val);
+              $timeout(function() {
+                if (typeof lucide !== 'undefined') {
+                  lucide.createIcons({ nodes: [element[0]] });
+                }
+              }, 0);
+            });
+          }
+        };
+      }])
 
       .factory('$exceptionHandler', function() {
         return function(exception, cause) {
@@ -1745,13 +2031,18 @@
           .otherwise({ redirectTo: '/' });
       }])
 
-      .run(['$rootScope', '$location', '$templateCache', function($rs, $loc, $tc) {
+      .run(['$rootScope', '$location', '$templateCache', '$timeout', function($rs, $loc, $tc, $timeout) {
         // Active nav helper
         $rs.isActive = function(p) { return $loc.path() === p; };
 
         // ── Scroll to top on every route change ──────────────────
         $rs.$on('$routeChangeSuccess', function() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
+          $timeout(function() {
+            if (typeof lucide !== 'undefined') {
+              lucide.createIcons();
+            }
+          }, 50);
         });
 
         // ── Mobile hamburger menu ─────────────────────────────────
@@ -1781,6 +2072,13 @@
           var el = document.getElementById(id);
           if (el) $tc.put(id, el.innerHTML);
         });
+
+        // Initial Lucide icon render (after first route loads)
+        $timeout(function() {
+          if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+          }
+        }, 100);
 
         // ── Auth state ──────────────────────────────────────────
         $rs.user = null;
@@ -1841,9 +2139,9 @@
 
         // Tabs logic for product showcase
         $s.tabs = [
-          { id: 'chat',  label: 'Conversations', emoji: '💬' },
-          { id: 'image', label: 'Image Creator', emoji: '🖼️' },
-          { id: 'doc',   label: 'Document Q&A',  emoji: '📄' }
+          { id: 'chat',  label: 'Conversations', icon: 'message-square' },
+          { id: 'image', label: 'Image Creator', icon: 'image' },
+          { id: 'doc',   label: 'Document Q&A',  icon: 'file-text' }
         ];
         $s.activeTab = 'chat';
 
@@ -1858,9 +2156,9 @@
 
         // How it works steps
         $s.howItWorks = [
-          { emoji: '👤', title: '1. Create Account', desc: 'Sign up in under 10 seconds for a free-tier plan.' },
-          { emoji: '⚙️', title: '2. Select Feature', desc: 'Choose between AI Chat, image generation, or Doc Upload.' },
-          { emoji: '✨', title: '3. Get Answers', desc: 'Receive instant results powered by state-of-the-art models.' }
+          { icon: 'user-plus', title: '1. Create Account', desc: 'Sign up in under 10 seconds for a free-tier plan.' },
+          { icon: 'sliders', title: '2. Select Feature', desc: 'Choose between AI Chat, image generation, or Doc Upload.' },
+          { icon: 'sparkles', title: '3. Get Answers', desc: 'Receive instant results powered by state-of-the-art models.' }
         ];
 
         // User Testimonials
@@ -1921,6 +2219,13 @@
         $s.messages = [{ role: 'bot', text: "Hey! I'm AIChatterbox. Ask me anything to get started." }];
         $s.draft = '';
         $s.isSending = false;
+
+        // Quick prompt helper (sidebar buttons)
+        $s.usePrompt = function(text) {
+          if ($s.isSending) return;
+          $s.draft = text;
+          $s.sendMessage();
+        };
 
         // Auto-scroll logic
         $s.scrollToBottom = function() {
@@ -2035,38 +2340,38 @@
       // ── FEATURES PAGE ────────────────────────────────────────────
       .controller('FeaturesCtrl', ['$scope', function($s) {
         $s.allFeatures = [
-          { emoji: '🖼️', title: 'AI Image Generation',    desc: 'Describe a scene in natural language and get a stunning visual instantly.' },
-          { emoji: '💬', title: 'Smart Conversations',    desc: 'Context-aware chat that actually remembers what you said.' },
-          { emoji: '📄', title: 'Document Q&A',           desc: 'Upload PDFs, Word files and ask questions about their content.' },
-          { emoji: '🚀', title: 'Blazing Fast Responses', desc: 'Powered by Groq — the fastest inference hardware on the planet.' },
-          { emoji: '🔓', title: 'Secure & Private',       desc: 'Your data stays yours. We never train on your conversations.' },
-          { emoji: '🌐', title: 'Multi-Language',         desc: 'Chat naturally in English, Spanish, French, Hindi, and more.' }
+          { icon: 'image', title: 'AI Image Generation', desc: 'Describe a scene in natural language and get a stunning visual instantly.', gradient: 'linear-gradient(135deg, #ec4899, #f43f5e)', color: '#ec4899' },
+          { icon: 'message-square', title: 'Smart Conversations', desc: 'Context-aware chat that actually remembers what you said.', gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)', color: '#06b6d4' },
+          { icon: 'file-text', title: 'Document Q&A', desc: 'Upload PDFs, Word files and ask questions about their content.', gradient: 'linear-gradient(135deg, #eab308, #ca8a04)', color: '#eab308' },
+          { icon: 'zap', title: 'Blazing Fast Responses', desc: 'Powered by Groq — the fastest inference hardware on the planet.', gradient: 'linear-gradient(135deg, #10b981, #059669)', color: '#10b981' },
+          { icon: 'shield-check', title: 'Secure & Private', desc: 'Your data stays yours. We never train on your conversations.', gradient: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: '#6366f1' },
+          { icon: 'globe', title: 'Multi-Language', desc: 'Chat naturally in English, Spanish, French, Hindi, and more.', gradient: 'linear-gradient(135deg, #f43f5e, #d946ef)', color: '#f43f5e' }
         ];
       }])
 
       // ── PRICING PAGE ────────────────────────────────────────────
       .controller('PricingCtrl', ['$scope', function($s) {
         $s.plans = [
-          { name: 'Free',    price: '$0',  desc: 'Perfect for personal use.', highlight: false, cta: 'Get Started',
-            features: ['50 messages / month', 'Basic AI responses', '1 document upload', 'Community support'] },
-          { name: 'Pro',     price: '$12', desc: 'For power users and creators.', highlight: true,  cta: 'Start Pro Trial',
-            features: ['Unlimited messages', 'Priority AI responses', 'Unlimited uploads', 'AI image generation', 'Email support'] },
-          { name: 'Team',    price: '$39', desc: 'Built for growing teams.', highlight: false, cta: 'Contact Sales',
-            features: ['Everything in Pro', 'Up to 10 members', 'Team dashboard', 'API access', 'Dedicated support'] }
+          { name: 'Free', price: '$0', desc: 'Perfect for personal use.', highlight: false, cta: 'Get Started',
+            features: ['50 messages / month', 'Basic AI responses', '1 document upload', 'Community support'], color: '#a855f7' },
+          { name: 'Pro', price: '$12', desc: 'For power users and creators.', highlight: true, cta: 'Start Pro Trial',
+            features: ['Unlimited messages', 'Priority AI responses', 'Unlimited uploads', 'AI image generation', 'Email support'], color: '#14b8a6' },
+          { name: 'Team', price: '$39', desc: 'Built for growing teams.', highlight: false, cta: 'Contact Sales',
+            features: ['Everything in Pro', 'Up to 10 members', 'Team dashboard', 'API access', 'Dedicated support'], color: '#f59e0b' }
         ];
       }])
 
       // ── INTEGRATIONS PAGE ────────────────────────────────────────
       .controller('IntegrationsCtrl', ['$scope', function($s) {
         $s.integrations = [
-          { emoji: '📋', name: 'Notion',      desc: 'Sync chats and summaries directly into your workspace.' },
-          { emoji: '👥', name: 'Slack',       desc: 'Get AI responses right inside your Slack channels.' },
-          { emoji: '📧', name: 'Gmail',       desc: 'Summarise, draft and manage emails with AI assistance.' },
-          { emoji: '💾', name: 'Google Drive',desc: 'Upload and query your Drive documents instantly.' },
-          { emoji: '📄', name: 'Dropbox',     desc: 'Connect your Dropbox files for document Q&A.' },
-          { emoji: '📱', name: 'WhatsApp',    desc: 'Chat with the AI right from WhatsApp.' },
-          { emoji: '🆕', name: 'Zapier',      desc: 'Build automated workflows with 5,000+ apps.' },
-          { emoji: '🔗', name: 'REST API',    desc: 'Integrate AIChatterbox into any product via our API.' }
+          { icon: 'book-open', name: 'Notion', desc: 'Sync chats and summaries directly into your workspace.', color: '#ea580c' },
+          { icon: 'slack', name: 'Slack', desc: 'Get AI responses right inside your Slack channels.', color: '#e11d48' },
+          { icon: 'mail', name: 'Gmail', desc: 'Summarise, draft and manage emails with AI assistance.', color: '#dc2626' },
+          { icon: 'hard-drive', name: 'Google Drive', desc: 'Upload and query your Drive documents instantly.', color: '#16a34a' },
+          { icon: 'folder', name: 'Dropbox', desc: 'Connect your Dropbox files for document Q&A.', color: '#2563eb' },
+          { icon: 'smartphone', name: 'WhatsApp', desc: 'Chat with the AI right from WhatsApp.', color: '#22c55e' },
+          { icon: 'git-pull-request', name: 'Zapier', desc: 'Build automated workflows with 5,000+ apps.', color: '#f97316' },
+          { icon: 'code', name: 'REST API', desc: 'Integrate AIChatterbox into any product via our API.', color: '#0d9488' }
         ];
       }])
 
@@ -2074,31 +2379,35 @@
       .controller('BlogCtrl', ['$scope', function($s) {
         $s.blogPosts = [
           {
-            emoji: '⚡', category: 'AI News', date: 'Jul 15, 2026',
+            icon: 'zap', category: 'AI News', date: 'Jul 15, 2026',
             title: 'Why Groq Changes Everything About AI Speed',
             excerpt: 'We switched our inference engine to Groq and cut response times by 10x. Here is what that means for your experience.',
-            bodyDetail: '\n\nBy utilizing Groq LPU technology, AIChatterbox executes model tokens at over 500 tokens per second — eliminating latency completely. Users can brainstorm uninterrupted and access results in the blink of an eye.'
+            bodyDetail: '\n\nBy utilizing Groq LPU technology, AIChatterbox executes model tokens at over 500 tokens per second — eliminating latency completely. Users can brainstorm uninterrupted and access results in the blink of an eye.',
+            color: '#a855f7'
           },
           {
-            emoji: '💡', category: 'Tips', date: 'Jul 10, 2026',
+            icon: 'lightbulb', category: 'Tips', date: 'Jul 10, 2026',
             title: '5 Prompts That Get the Best Answers From AIChatterbox',
             excerpt: 'Good prompts get good answers. We tested hundreds of patterns and distilled them into five simple templates.',
-            bodyDetail: '\n\n1. "Explain [topic] in three bullet points."\n2. "Write code for [action] in [language]."\n3. "Brainstorm 5 unique titles for [theme]."\n4. "Summarize this focusing only on actionable decisions."\n5. "Compare [A] and [B] in a markdown table."'
+            bodyDetail: '\n\n1. "Explain [topic] in three bullet points."\n2. "Write code for [action] in [language]."\n3. "Brainstorm 5 unique titles for [theme]."\n4. "Summarize this focusing only on actionable decisions."\n5. "Compare [A] and [B] in a markdown table."',
+            color: '#eab308'
           },
           {
-            emoji: '📂', category: 'Feature', date: 'Jul 3, 2026',
+            icon: 'folder-open', category: 'Feature', date: 'Jul 3, 2026',
             title: 'Document Chat Is Here - Ask Your PDFs Anything',
             excerpt: 'Our new document Q&A feature lets you upload any PDF or Word file and have a real conversation with its content.',
-            bodyDetail: '\n\nSimply upload your files and ask questions grounded in the document text. Perfect for research papers, contracts, financial reports, or extracting action items from long summaries.'
+            bodyDetail: '\n\nSimply upload your files and ask questions grounded in the document text. Perfect for research papers, contracts, financial reports, or extracting action items from long summaries.',
+            color: '#0d9488'
           },
           {
-            emoji: '🔒', category: 'Security', date: 'Jun 28, 2026',
+            icon: 'lock', category: 'Security', date: 'Jun 28, 2026',
             title: 'How We Keep Your Conversations Private',
             excerpt: 'We explain exactly how your data is handled, stored, and never used to train AI models.',
-            bodyDetail: '\n\nAll requests are processed temporarily without saving content permanently. We never sell your interactions or use them to retrain public models. Your conversations stay private — always.'
+            bodyDetail: '\n\nAll requests are processed temporarily without saving content permanently. We never sell your interactions or use them to retrain public models. Your conversations stay private — always.',
+            color: '#f43f5e'
           }
         ];
-      }]);
+      }])
   </script>
 
   <style>
@@ -2110,13 +2419,13 @@
       display: flex; align-items: center; justify-content: center;
     }
     .login-modal-content {
-      background: #0b1527;
-      border: 1px solid rgba(70,120,255,0.28);
+      background: rgba(12, 6, 22, 0.97);
+      border: 1px solid rgba(168, 85, 247, 0.28);
       border-radius: 22px;
       padding: 38px 36px;
       width: 100%; max-width: 400px;
       position: relative;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(168,85,247,0.06);
     }
     .login-modal-content h2 {
       font-size: 22px; font-weight: 800;
@@ -2128,7 +2437,7 @@
     }
     .login-modal-content input {
       background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(70,120,255,0.20);
+      border: 1px solid rgba(168, 85, 247, 0.20);
       border-radius: 10px; padding: 12px 16px;
       color: var(--text-main); font-size: 14px;
       font-family: inherit; outline: none;
