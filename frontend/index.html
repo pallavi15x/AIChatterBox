@@ -13,6 +13,11 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
+    /* Prevent flash of uncompiled AngularJS templates */
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+
     /* ==========================================
        TOKENS & VARIABLES
        ========================================== */
@@ -1563,7 +1568,7 @@
   <!-- ==========================================
        LOGIN / SIGNUP MODAL
        ========================================== -->
-  <div class="login-modal-overlay" ng-if="showLoginModal" ng-click="$root.showLoginModal = false" id="modal-overlay">
+  <div class="login-modal-overlay ng-cloak" ng-if="showLoginModal" ng-click="$root.showLoginModal = false" id="modal-overlay">
     <div class="login-modal-content" ng-click="$event.stopPropagation()">
       <button class="modal-close" ng-click="$root.showLoginModal = false">&times;</button>
       
